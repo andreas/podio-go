@@ -116,10 +116,9 @@ func (client *Client) request(method string, path string, headers map[string]str
 	if err != nil {
 		return err
 	}
+	defer resp.Body.Close()
 
 	respBody, err := ioutil.ReadAll(resp.Body)
-	resp.Body.Close()
-
 	if err != nil {
 		return err
 	}
