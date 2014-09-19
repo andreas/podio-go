@@ -10,7 +10,6 @@ import (
 	"mime/multipart"
 	"net/http"
 	"net/url"
-	"reflect"
 	"strings"
 )
 
@@ -130,7 +129,7 @@ func (client *Client) request(method string, path string, headers map[string]str
 	}
 
 	if out != nil {
-		err = json.Unmarshal(respBody, reflect.ValueOf(out).Interface())
+		err = json.Unmarshal(respBody, out)
 		if err != nil {
 			return err
 		}
