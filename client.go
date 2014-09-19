@@ -65,6 +65,22 @@ type AuthToken struct {
 	TransferToken string                 `json:"transfer_token"`
 }
 
+type Error struct {
+	Parameters interface{} `json:"error_parameters"`
+	Detail     interface{} `json:"error_detail"`
+	Propagate  bool        `json:"error_propagate"`
+	Request    struct {
+		URL   string `json:"url"`
+		Query string `json:"query_string"`
+	} `json:"request"`
+	Description string `json:"error_description"`
+	Type        string `json:"error"`
+}
+
+func (p *Error) Error() string {
+	return fmt.Sprintf("%s: %s", p.Type, p.Description)
+}
+
 func AuthWithUserCredentials(client_id string, client_secret string, username string, password string) (*AuthToken, error) {
 	var authToken AuthToken
 
@@ -124,7 +140,12 @@ func (client *Client) request(method string, path string, headers map[string]str
 	}
 
 	if !(200 <= resp.StatusCode && resp.StatusCode < 300) {
-		return errors.New(string(respBody[:]))
+		podioErr := &Error{}
+		err := json.Unmarshal(respBody, podioErr)
+		if err != nil {
+			return errors.New(string(respBody))
+		}
+		return podioErr
 	}
 
 	if out != nil {
