@@ -36,17 +36,30 @@ type App struct {
 }
 
 type Item struct {
-	Id                 uint   `json:"item_id"`
-	AppItemId          uint   `json:"app_item_id"`
-	FormattedAppItemId string `json:"app_item_id_formatted"`
-	Title              string `json:"title"`
-	Files              []File `json:"files"`
+	Id                 uint     `json:"item_id"`
+	AppItemId          uint     `json:"app_item_id"`
+	FormattedAppItemId string   `json:"app_item_id_formatted"`
+	Title              string   `json:"title"`
+	Files              []*File  `json:"files"`
+	Fields             []*Field `json:"fields"`
+}
+
+type Field struct {
+	FieldID    uint     `json:"field_id"`
+	ExternalID string   `json:"external_id"`
+	Type       string   `json:"type"`
+	Label      string   `json:"label"`
+	Values     []*Value `json:"values"`
+}
+
+type Value struct {
+	Value interface{} `json:"value"`
 }
 
 type ItemList struct {
-	Filtered uint   `json:"filtered"`
-	Total    uint   `json:"total"`
-	Items    []Item `json:"items"`
+	Filtered uint    `json:"filtered"`
+	Total    uint    `json:"total"`
+	Items    []*Item `json:"items"`
 }
 
 type File struct {
