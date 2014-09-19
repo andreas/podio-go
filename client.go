@@ -69,6 +69,18 @@ type File struct {
 	Size int    `json:"size"`
 }
 
+type Comment struct {
+	ID         uint                   `json:"comment_id"`
+	Value      string                 `json:"value"`
+	Ref        map[string]interface{} `json:"ref"`
+	Files      []*File                `json:"files"`
+	CreatedBy  interface{}            `json:"created_by"`
+	CreatedVia interface{}            `json:"created_via"`
+	CreatedOn  interface{}            `json:"created_on"`
+	IsLiked    bool                   `json:"is_liked"`
+	LikeCount  int                    `json:"like_count"`
+}
+
 type AuthToken struct {
 	AccessToken   string                 `json:"access_token"`
 	TokenType     string                 `json:"token_type"`
@@ -276,6 +288,25 @@ func (client *Client) GetItemByExternalID(app_id uint, external_id string) (item
 func (client *Client) GetItem(item_id uint) (item *Item, err error) {
 	path := fmt.Sprintf("/item/%d?fields=files", item_id)
 	err = client.request("GET", path, nil, nil, &item)
+	return
+}
+
+func (client *Client) Comment(refType, refId, text string) (comment *Comment, err error) {
+	path := fmt.Sprintf("/comment/%s/%d/", refType, refId)
+	buf, err := json.Marshal(struct {
+		Value string `json:"value"`
+	}{text})
+	if err != nil {
+		return
+	}
+
+	err = client.request("POST", path, nil, bytes.NewReader(buf), comment)
+	return
+}
+
+func (client *Client) GetComments(refType string, refId string) (comments []*Comment, err error) {
+	path := fmt.Sprintf("/comment/%s/%s/", refType, refId)
+	err = client.request("GET", path, nil, nil, &comments)
 	return
 }
 
