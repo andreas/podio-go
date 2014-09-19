@@ -254,6 +254,12 @@ func (client *Client) GetItemByAppItemId(app_id uint, formatted_app_item_id stri
 	return
 }
 
+func (client *Client) GetItemByExternalID(app_id uint, external_id string) (item *Item, err error) {
+	path := fmt.Sprintf("/item/app/%d/external_id/%s", app_id, external_id)
+	err = client.request("GET", path, nil, nil, &item)
+	return
+}
+
 func (client *Client) GetItem(item_id uint) (item *Item, err error) {
 	path := fmt.Sprintf("/item/%d?fields=files", item_id)
 	err = client.request("GET", path, nil, nil, &item)
