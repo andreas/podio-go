@@ -291,6 +291,40 @@ func (client *Client) GetItem(item_id uint) (item *Item, err error) {
 	return
 }
 
+func (client *Client) CreateItem(app_id uint, external_id string, fieldValues map[string]interface{}) (uint, error) {
+	path := fmt.Sprintf("/item/app/%d", app_id)
+	val := map[string]interface{}{
+		"fields": fieldValues,
+	}
+
+	if external_id != "" {
+		val["external_id"] = external_id
+	}
+
+	buf, err := json.Marshal(val)
+	if err != nil {
+		return 0, err
+	}
+
+	rsp := &struct {
+		ItemId uint `json:"item_id"`
+	}{}
+	err = client.request("POST", path, nil, bytes.NewReader(buf), rsp)
+
+	return rsp.ItemId, err
+}
+
+func (client *Client) UpdateItem(itemId uint, fieldValues map[string]interface{}) error {
+	path := fmt.Sprintf("/item/%d", itemId)
+	buf, err := json.Marshal(map[string]interface{}{"fields": fieldValues})
+	if err != nil {
+		return err
+	}
+
+	return client.request("PUT", path, nil, bytes.NewBuffer(buf), nil)
+
+}
+
 func (client *Client) Comment(refType, refId, text string) (comment *Comment, err error) {
 	path := fmt.Sprintf("/comment/%s/%d/", refType, refId)
 	buf, err := json.Marshal(struct {
