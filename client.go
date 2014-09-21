@@ -174,12 +174,12 @@ func NewClient(authToken *AuthToken) *Client {
 func (client *Client) request(method string, path string, headers map[string]string, body io.Reader, out interface{}) error {
 	req, err := http.NewRequest(method, "https://api.podio.com"+path, body)
 
-	for k, v := range headers {
-		req.Header.Add(k, v)
-	}
-
 	if err != nil {
 		return err
+	}
+
+	for k, v := range headers {
+		req.Header.Add(k, v)
 	}
 
 	req.Header.Add("Authorization", "OAuth2 "+client.authToken.AccessToken)
