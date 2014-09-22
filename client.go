@@ -10,7 +10,6 @@ import (
 	"mime/multipart"
 	"net/http"
 	"net/url"
-	"strings"
 )
 
 type Client struct {
@@ -173,7 +172,6 @@ func NewClient(authToken *AuthToken) *Client {
 
 func (client *Client) request(method string, path string, headers map[string]string, body io.Reader, out interface{}) error {
 	req, err := http.NewRequest(method, "https://api.podio.com"+path, body)
-
 	if err != nil {
 		return err
 	}
@@ -184,7 +182,6 @@ func (client *Client) request(method string, path string, headers map[string]str
 
 	req.Header.Add("Authorization", "OAuth2 "+client.authToken.AccessToken)
 	resp, err := client.httpClient.Do(req)
-
 	if err != nil {
 		return err
 	}
@@ -212,6 +209,15 @@ func (client *Client) request(method string, path string, headers map[string]str
 	}
 
 	return nil
+}
+
+func (client *Client) requestWithParams(method string, path string, headers map[string]string, params map[string]interface{}, out interface{}) error {
+	buf, err := json.Marshal(params)
+	if err != nil {
+		return err
+	}
+
+	return client.request(method, path, headers, bytes.NewReader(buf), out)
 }
 
 func (client *Client) GetOrganizations() (orgs []Organization, err error) {
@@ -293,49 +299,41 @@ func (client *Client) GetItem(item_id uint) (item *Item, err error) {
 
 func (client *Client) CreateItem(app_id uint, external_id string, fieldValues map[string]interface{}) (uint, error) {
 	path := fmt.Sprintf("/item/app/%d", app_id)
-	val := map[string]interface{}{
+	params := map[string]interface{}{
 		"fields": fieldValues,
 	}
 
 	if external_id != "" {
-		val["external_id"] = external_id
-	}
-
-	buf, err := json.Marshal(val)
-	if err != nil {
-		return 0, err
+		params["external_id"] = external_id
 	}
 
 	rsp := &struct {
 		ItemId uint `json:"item_id"`
 	}{}
-	err = client.request("POST", path, nil, bytes.NewReader(buf), rsp)
+	err := client.requestWithParams("POST", path, nil, params, rsp)
 
 	return rsp.ItemId, err
 }
 
 func (client *Client) UpdateItem(itemId uint, fieldValues map[string]interface{}) error {
 	path := fmt.Sprintf("/item/%d", itemId)
-	buf, err := json.Marshal(map[string]interface{}{"fields": fieldValues})
-	if err != nil {
-		return err
+	params := map[string]interface{}{
+		"fields": fieldValues,
 	}
 
-	return client.request("PUT", path, nil, bytes.NewBuffer(buf), nil)
+	return client.requestWithParams("PUT", path, nil, params, nil)
 
 }
 
-func (client *Client) Comment(refType, refId, text string) (comment *Comment, err error) {
+func (client *Client) Comment(refType, refId, text string) (*Comment, error) {
 	path := fmt.Sprintf("/comment/%s/%d/", refType, refId)
-	buf, err := json.Marshal(struct {
-		Value string `json:"value"`
-	}{text})
-	if err != nil {
-		return
+	params := map[string]interface{}{
+		"value": text,
 	}
 
-	err = client.request("POST", path, nil, bytes.NewReader(buf), comment)
-	return
+	comment := &Comment{}
+	err := client.requestWithParams("POST", path, nil, params, comment)
+	return comment, err
 }
 
 func (client *Client) GetComments(refType string, refId string) (comments []*Comment, err error) {
@@ -406,14 +404,21 @@ func (client *Client) CreateFile(name string, contents []byte) (file *File, err 
 
 func (client *Client) ReplaceFile(oldFileId, newFileId uint) error {
 	path := fmt.Sprintf("/file/%d/replace", newFileId)
-	body := strings.NewReader(fmt.Sprintf("{\"old_file_id\":%d}", oldFileId))
-	return client.request("POST", path, nil, body, nil)
+	params := map[string]interface{}{
+		"old_file_id": oldFileId,
+	}
+
+	return client.requestWithParams("POST", path, nil, params, nil)
 }
 
 func (client *Client) AttachFile(fileId uint, refType string, refId uint) error {
 	path := fmt.Sprintf("/file/%d/attach", fileId)
-	body := strings.NewReader(fmt.Sprintf("{\"ref_type\":\"%s\",\"ref_id\":%d}", refType, refId))
-	return client.request("POST", path, nil, body, nil)
+	params := map[string]interface{}{
+		"ref_type": refType,
+		"ref_id":   refId,
+	}
+
+	return client.requestWithParams("POST", path, nil, params, nil)
 }
 
 func (client *Client) DeleteFile(fileId uint) error {
