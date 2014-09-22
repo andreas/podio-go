@@ -12,8 +12,8 @@ type Item struct {
 }
 
 type Field struct {
-	FieldID    uint     `json:"field_id"`
-	ExternalID string   `json:"external_id"`
+	FieldId    uint     `json:"field_id"`
+	ExternalId string   `json:"external_id"`
 	Type       string   `json:"type"`
 	Label      string   `json:"label"`
 	Values     []*Value `json:"values"`
