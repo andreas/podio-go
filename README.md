@@ -29,6 +29,14 @@ See [example/main.go](example/main.go).
 
 ## Status
 
-- The client only supports authentication with username and password (see [Username and Password flow](https://developers.podio.com/authentication/username_password)).
-- Only supports a fraction of the API methods yet, specifically around organizations, spaces, apps, items and files.
+- The client supports authentication with username and password (see [Username and Password flow](https://developers.podio.com/authentication/username_password)).
+- The client supports app authentication (see [App authentication flow](https://developers.podio.com/authentication/app_auth)).
+- Only supports a fraction of the API methods available, specifically around organizations, spaces, apps, items and files.
 - Only a few number of fields have been defined per type.
+
+## Contributors
+
+The following people have contributed to podio-go:
+
+- andreas
+- stengaard
