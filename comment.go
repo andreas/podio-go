@@ -14,7 +14,7 @@ type Comment struct {
 	LikeCount  int                    `json:"like_count"`
 }
 
-func (client *Client) Comment(refType, refId, text string) (*Comment, error) {
+func (client *Client) Comment(refType string, refId uint, text string) (*Comment, error) {
 	path := fmt.Sprintf("/comment/%s/%d/", refType, refId)
 	params := map[string]interface{}{
 		"value": text,
@@ -25,8 +25,8 @@ func (client *Client) Comment(refType, refId, text string) (*Comment, error) {
 	return comment, err
 }
 
-func (client *Client) GetComments(refType string, refId string) (comments []*Comment, err error) {
-	path := fmt.Sprintf("/comment/%s/%s/", refType, refId)
+func (client *Client) GetComments(refType string, refId uint) (comments []*Comment, err error) {
+	path := fmt.Sprintf("/comment/%s/%d/", refType, refId)
 	err = client.request("GET", path, nil, nil, &comments)
 	return
 }
