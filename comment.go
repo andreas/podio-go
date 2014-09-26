@@ -5,7 +5,7 @@ import "fmt"
 // Comment is a comment on an object in podio.
 // The object to which this comment is associated is described in this Reference.
 type Comment struct {
-	ID         uint       `json:"comment_id"`
+	Id         uint       `json:"comment_id"`
 	ExternalId string     `json:"external_id"`
 	Value      string     `json:"value"`
 	Ref        *Reference `json:"ref"`
