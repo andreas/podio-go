@@ -2,6 +2,7 @@ package podio
 
 import (
 	"fmt"
+	"strings"
 	"time"
 )
 
@@ -13,22 +14,17 @@ type Time struct {
 
 const podioLayout = "2006-01-02 15:04:05"
 
-func (t *Time) UnmarshalJSON(from []byte) error {
+func (t *Time) UnmarshalJSON(buf []byte) error {
 	// apparently we need to trim "
-	if from[0] == '"' {
-		from = from[1:]
-	}
-	if from[len(from)-1] == '"' {
-		from = from[:len(from)-1]
-	}
+	raw := strings.Trim(string(buf), "\"")
 
-	if string(from) == "null" {
+	if raw == "null" {
 		// on null value we set the time to the time.Time zero value
 		t.Time = time.Time{}
 		return nil
 	}
 
-	tm, err := time.ParseInLocation(podioLayout, string(from), time.UTC)
+	tm, err := time.ParseInLocation(podioLayout, raw, time.UTC)
 	if err == nil {
 		t.Time = tm
 	}
