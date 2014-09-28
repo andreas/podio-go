@@ -17,12 +17,12 @@ type Comment struct {
 	LikeCount  int        `json:"like_count"`
 }
 
-// CommentAttr adds a comment to a podio object. It returns a Comment (with podio ID) or an error if one occured.
+// Comment adds a comment to a podio object. It returns a Comment (with podio ID) or an error if one occured.
 //
 // refType (item, task, ...) and refId identifies the podio object to which the comment is added.
-// Additional parameters can be set in the params map.
 // text is the actual comment value.
-func (client *Client) CommentAttr(refType string, refId uint, params map[string]interface{}, text string) (*Comment, error) {
+// Additional parameters can be set in the params map.
+func (client *Client) Comment(refType string, refId uint, text string, params map[string]interface{}) (*Comment, error) {
 	path := fmt.Sprintf("/comment/%s/%d/", refType, refId)
 	if params == nil {
 		params = map[string]interface{}{}
@@ -32,13 +32,6 @@ func (client *Client) CommentAttr(refType string, refId uint, params map[string]
 	comment := &Comment{}
 	err := client.requestWithParams("POST", path, nil, params, comment)
 	return comment, err
-}
-
-// Comment adds a comment to a podio object.
-//
-// This is equivalent to calling CommentAttr with a nil params map.
-func (client *Client) Comment(refType string, refId uint, text string) (*Comment, error) {
-	return client.CommentAttr(refType, refId, nil, text)
 }
 
 // GetComments retrieves the comments associated with a podio object.
