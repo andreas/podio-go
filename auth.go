@@ -2,6 +2,7 @@ package podio
 
 import (
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -17,45 +18,45 @@ type AuthToken struct {
 	TransferToken string                 `json:"transfer_token"`
 }
 
-func AuthWithUserCredentials(client_id string, client_secret string, username string, password string) (*AuthToken, error) {
-	var authToken AuthToken
-
+func AuthWithUserCredentials(clientId string, clientSecret string, username string, password string) (*AuthToken, error) {
 	data := url.Values{
 		"grant_type":    {"password"},
 		"username":      {username},
 		"password":      {password},
-		"client_id":     {client_id},
-		"client_secret": {client_secret},
-	}
-	resp, err := http.PostForm("https://api.podio.com/oauth/token", data)
-	if err != nil {
-		return nil, err
-	}
-	defer resp.Body.Close()
-
-	respBody, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		return nil, err
+		"client_id":     {clientId},
+		"client_secret": {clientSecret},
 	}
 
-	err = json.Unmarshal(respBody, &authToken)
-	if err != nil {
-		return nil, err
-	}
-
-	return &authToken, nil
+	return authRequest(data)
 }
 
-func AuthWithAppCredentials(client_id, client_secret string, app_id uint, app_token string) (*AuthToken, error) {
-	var authToken AuthToken
-
+func AuthWithAppCredentials(clientId, clientSecret string, appId uint, appToken string) (*AuthToken, error) {
 	data := url.Values{
 		"grant_type":    {"app"},
-		"app_id":        {fmt.Sprintf("%d", app_id)},
-		"app_token":     {app_token},
-		"client_id":     {client_id},
-		"client_secret": {client_secret},
+		"app_id":        {fmt.Sprintf("%d", appId)},
+		"app_token":     {appToken},
+		"client_id":     {clientId},
+		"client_secret": {clientSecret},
 	}
+
+	return authRequest(data)
+}
+
+func AuthWithAuthCode(clientId, clientSecret, authCode, redirectUri string) (*AuthToken, error) {
+	data := url.Values{
+		"grant_type":    {"authorization_code"},
+		"client_id":     {clientId},
+		"client_secret": {clientSecret},
+		"redirect_uri":  {redirectUri},
+		"code":          {authCode},
+	}
+
+	return authRequest(data)
+}
+
+func authRequest(data url.Values) (*AuthToken, error) {
+	var authToken AuthToken
+
 	resp, err := http.PostForm("https://api.podio.com/oauth/token", data)
 	if err != nil {
 		return nil, err
@@ -65,6 +66,15 @@ func AuthWithAppCredentials(client_id, client_secret string, app_id uint, app_to
 	respBody, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		return nil, err
+	}
+
+	if !(200 <= resp.StatusCode && resp.StatusCode <= 299) {
+		podioErr := &Error{}
+		err := json.Unmarshal(respBody, podioErr)
+		if err != nil {
+			return nil, errors.New(string(respBody))
+		}
+		return nil, podioErr
 	}
 
 	err = json.Unmarshal(respBody, &authToken)
