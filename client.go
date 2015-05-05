@@ -38,7 +38,7 @@ func NewClient(authToken *AuthToken) *Client {
 	}
 }
 
-func (client *Client) request(method string, path string, headers map[string]string, body io.Reader, out interface{}) error {
+func (client *Client) Request(method string, path string, headers map[string]string, body io.Reader, out interface{}) error {
 	req, err := http.NewRequest(method, "https://api.podio.com"+path, body)
 	if err != nil {
 		return err
@@ -79,11 +79,11 @@ func (client *Client) request(method string, path string, headers map[string]str
 	return nil
 }
 
-func (client *Client) requestWithParams(method string, path string, headers map[string]string, params map[string]interface{}, out interface{}) error {
+func (client *Client) RequestWithParams(method string, path string, headers map[string]string, params map[string]interface{}, out interface{}) error {
 	buf, err := json.Marshal(params)
 	if err != nil {
 		return err
 	}
 
-	return client.request(method, path, headers, bytes.NewReader(buf), out)
+	return client.Request(method, path, headers, bytes.NewReader(buf), out)
 }
