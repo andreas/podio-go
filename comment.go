@@ -30,7 +30,7 @@ func (client *Client) Comment(refType string, refId uint, text string, params ma
 	params["value"] = text
 
 	comment := &Comment{}
-	err := client.requestWithParams("POST", path, nil, params, comment)
+	err := client.RequestWithParams("POST", path, nil, params, comment)
 	return comment, err
 }
 
@@ -40,6 +40,6 @@ func (client *Client) Comment(refType string, refId uint, text string, params ma
 // refId is the podio id of the podio object.
 func (client *Client) GetComments(refType string, refId uint) (comments []*Comment, err error) {
 	path := fmt.Sprintf("/comment/%s/%d/", refType, refId)
-	err = client.request("GET", path, nil, nil, &comments)
+	err = client.Request("GET", path, nil, nil, &comments)
 	return
 }

@@ -16,12 +16,12 @@ type File struct {
 }
 
 func (client *Client) GetFiles() (files []File, err error) {
-	err = client.request("GET", "/file", nil, nil, &files)
+	err = client.Request("GET", "/file", nil, nil, &files)
 	return
 }
 
 func (client *Client) GetFile(file_id uint) (file *File, err error) {
-	err = client.request("GET", fmt.Sprintf("/file/%d", file_id), nil, nil, &file)
+	err = client.Request("GET", fmt.Sprintf("/file/%d", file_id), nil, nil, &file)
 	return
 }
 
@@ -71,7 +71,7 @@ func (client *Client) CreateFile(name string, contents []byte) (file *File, err 
 		"Content-Type": writer.FormDataContentType(),
 	}
 
-	err = client.request("POST", "/file", headers, body, &file)
+	err = client.Request("POST", "/file", headers, body, &file)
 	return
 }
 
@@ -81,7 +81,7 @@ func (client *Client) ReplaceFile(oldFileId, newFileId uint) error {
 		"old_file_id": oldFileId,
 	}
 
-	return client.requestWithParams("POST", path, nil, params, nil)
+	return client.RequestWithParams("POST", path, nil, params, nil)
 }
 
 func (client *Client) AttachFile(fileId uint, refType string, refId uint) error {
@@ -91,10 +91,10 @@ func (client *Client) AttachFile(fileId uint, refType string, refId uint) error 
 		"ref_id":   refId,
 	}
 
-	return client.requestWithParams("POST", path, nil, params, nil)
+	return client.RequestWithParams("POST", path, nil, params, nil)
 }
 
 func (client *Client) DeleteFile(fileId uint) error {
 	path := fmt.Sprintf("/file/%d", fileId)
-	return client.request("DELETE", path, nil, nil, nil)
+	return client.Request("DELETE", path, nil, nil, nil)
 }
