@@ -1,3 +1,5 @@
+// +build ignore
+
 // This is a small chat client for Podio
 package main
 

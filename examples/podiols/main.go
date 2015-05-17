@@ -1,7 +1,9 @@
+// Command podiols lists the content of your podio account.
 package main
 
 import (
 	"fmt"
+
 	"github.com/andreas/podio-go"
 )
 
