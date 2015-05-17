@@ -40,15 +40,9 @@ type ConversationEvent struct {
 		CreatedOn Time
 	}
 
-	CreatedVia struct {
-		ID         uint   `json:"id"`
-		URL        string `json:"url"`
-		AuthClient uint   `json:"auth_client"`
-		Display    bool   `json:"display"`
-		Name       string `json:"name"`
-	} `json:"created_via"`
-	CreatedBy ByLine `json:"created_by"`
-	CreatedOn Time   `json:"created_on"`
+	CreatedVia Via    `json:"created_via"`
+	CreatedBy  ByLine `json:"created_by"`
+	CreatedOn  Time   `json:"created_on"`
 }
 
 // ConversationSelector can modify the scope of a conversations lookup request - see WithLimit and WithOffset for examples.
