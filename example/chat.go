@@ -1,7 +1,4 @@
-// +build ignore
-
-// This is a small chat client
-
+// This is a small chat client for Podio
 package main
 
 import (
@@ -21,6 +18,7 @@ import (
 	"time"
 
 	"github.com/andreas/podio-go"
+	"github.com/andreas/podio-go/conversation"
 )
 
 var (
@@ -58,7 +56,7 @@ func main() {
 		fmt.Fprintf(os.Stderr, "Err writing token file: %s\n", err)
 	}
 
-	client := podio.NewClient(token)
+	client := &conversation.Client{podio.NewClient(token)}
 
 	id, err := strconv.Atoi(flag.Arg(0))
 	if err != nil {
@@ -88,8 +86,8 @@ func envDefault(key, deflt string) string {
 	return val
 }
 
-func listConversations(client *podio.Client) {
-	convs, err := client.GetConversations(podio.WithLimit(200))
+func listConversations(client *conversation.Client) {
+	convs, err := client.GetConversations(conversation.WithLimit(200))
 	if err != nil {
 		fmt.Fprintln(os.Stderr, "Error getting conversation list:", err)
 		return
@@ -103,17 +101,17 @@ func listConversations(client *podio.Client) {
 	}
 }
 
-func talkTo(client *podio.Client, convId uint) {
+func talkTo(client *conversation.Client, convId uint) {
 	var (
-		eventChan = make(chan podio.ConversationEvent, 1)
+		eventChan = make(chan conversation.Event, 1)
 		inputChan = make(chan string)
 	)
 
 	go func() {
-		last := podio.ConversationEvent{}
+		last := conversation.Event{}
 		for {
 
-			events, err := client.GetConversationEvents(convId, podio.WithLimit(1))
+			events, err := client.GetEvents(convId, conversation.WithLimit(1))
 			if err != nil {
 				fmt.Fprintln(os.Stderr, "Err getting update:", err)
 				time.Sleep(800 * time.Millisecond)
