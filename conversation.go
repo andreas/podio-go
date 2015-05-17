@@ -86,9 +86,7 @@ func (client *Client) Reply(conversationId uint, reply string) (ConversationEven
 	path := fmt.Sprintf("/conversation/%d/reply/v2", conversationId)
 	out := ConversationEvent{}
 
-	buf, err := json.Marshal(struct {
-		Text string `json:"text"`
-	}{Text: reply})
+	buf, err := json.Marshal(map[string]string{"text": reply})
 	if err != nil {
 		return out, err
 	}
