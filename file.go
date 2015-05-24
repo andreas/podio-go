@@ -9,7 +9,7 @@ import (
 )
 
 type File struct {
-	Id   uint   `json:"file_id"`
+	Id   int    `json:"file_id"`
 	Name string `json:"name"`
 	Link string `json:"link"`
 	Size int    `json:"size"`
@@ -20,7 +20,7 @@ func (client *Client) GetFiles() (files []File, err error) {
 	return
 }
 
-func (client *Client) GetFile(file_id uint) (file *File, err error) {
+func (client *Client) GetFile(file_id int) (file *File, err error) {
 	err = client.Request("GET", fmt.Sprintf("/file/%d", file_id), nil, nil, &file)
 	return
 }
@@ -75,7 +75,7 @@ func (client *Client) CreateFile(name string, contents []byte) (file *File, err 
 	return
 }
 
-func (client *Client) ReplaceFile(oldFileId, newFileId uint) error {
+func (client *Client) ReplaceFile(oldFileId, newFileId int) error {
 	path := fmt.Sprintf("/file/%d/replace", newFileId)
 	params := map[string]interface{}{
 		"old_file_id": oldFileId,
@@ -84,7 +84,7 @@ func (client *Client) ReplaceFile(oldFileId, newFileId uint) error {
 	return client.RequestWithParams("POST", path, nil, params, nil)
 }
 
-func (client *Client) AttachFile(fileId uint, refType string, refId uint) error {
+func (client *Client) AttachFile(fileId int, refType string, refId int) error {
 	path := fmt.Sprintf("/file/%d/attach", fileId)
 	params := map[string]interface{}{
 		"ref_type": refType,
@@ -94,7 +94,7 @@ func (client *Client) AttachFile(fileId uint, refType string, refId uint) error 
 	return client.RequestWithParams("POST", path, nil, params, nil)
 }
 
-func (client *Client) DeleteFile(fileId uint) error {
+func (client *Client) DeleteFile(fileId int) error {
 	path := fmt.Sprintf("/file/%d", fileId)
 	return client.Request("DELETE", path, nil, nil, nil)
 }

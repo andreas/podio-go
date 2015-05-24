@@ -8,8 +8,8 @@ import (
 
 // Item describes a Podio item object
 type Item struct {
-	Id                 uint     `json:"item_id"`
-	AppItemId          uint     `json:"app_item_id"`
+	Id                 int      `json:"item_id"`
+	AppItemId          int      `json:"app_item_id"`
 	FormattedAppItemId string   `json:"app_item_id_formatted"`
 	Title              string   `json:"title"`
 	Files              []*File  `json:"files"`
@@ -20,7 +20,7 @@ type Item struct {
 	CreatedBy          ByLine   `json:"by_line"`
 	CreatedOn          Time     `json:"created_on"`
 	Link               string   `json:"link"`
-	ItemId             uint     `json:"item_id"`
+	ItemId             int      `json:"item_id"`
 	Revision           int      `json:"revision"`
 }
 
@@ -196,54 +196,54 @@ type TelValue struct {
 type CalculationValue map[string]interface{}
 
 type ItemList struct {
-	Filtered uint    `json:"filtered"`
-	Total    uint    `json:"total"`
+	Filtered int     `json:"filtered"`
+	Total    int     `json:"total"`
 	Items    []*Item `json:"items"`
 }
 
-func (client *Client) GetItems(app_id uint) (items *ItemList, err error) {
-	path := fmt.Sprintf("/item/app/%d/filter?fields=items.fields(files)", app_id)
+func (client *Client) GetItems(appId int) (items *ItemList, err error) {
+	path := fmt.Sprintf("/item/app/%d/filter?fields=items.fields(files)", appId)
 	err = client.Request("POST", path, nil, nil, &items)
 	return
 }
 
-func (client *Client) GetItemByAppItemId(app_id uint, formatted_app_item_id string) (item *Item, err error) {
-	path := fmt.Sprintf("/app/%d/item/%s", app_id, formatted_app_item_id)
+func (client *Client) GetItemByAppItemId(appId int, formattedAppItemId string) (item *Item, err error) {
+	path := fmt.Sprintf("/app/%d/item/%s", appId, formattedAppItemId)
 	err = client.Request("GET", path, nil, nil, &item)
 	return
 }
 
-func (client *Client) GetItemByExternalID(app_id uint, external_id string) (item *Item, err error) {
-	path := fmt.Sprintf("/item/app/%d/external_id/%s", app_id, external_id)
+func (client *Client) GetItemByExternalID(appId int, externalId string) (item *Item, err error) {
+	path := fmt.Sprintf("/item/app/%d/external_id/%s", appId, externalId)
 	err = client.Request("GET", path, nil, nil, &item)
 	return
 }
 
-func (client *Client) GetItem(item_id uint) (item *Item, err error) {
+func (client *Client) GetItem(item_id int) (item *Item, err error) {
 	path := fmt.Sprintf("/item/%d?fields=files", item_id)
 	err = client.Request("GET", path, nil, nil, &item)
 	return
 }
 
-func (client *Client) CreateItem(app_id uint, external_id string, fieldValues map[string]interface{}) (uint, error) {
-	path := fmt.Sprintf("/item/app/%d", app_id)
+func (client *Client) CreateItem(appId int, externalId string, fieldValues map[string]interface{}) (int, error) {
+	path := fmt.Sprintf("/item/app/%d", appId)
 	params := map[string]interface{}{
 		"fields": fieldValues,
 	}
 
-	if external_id != "" {
-		params["external_id"] = external_id
+	if externalId != "" {
+		params["external_id"] = externalId
 	}
 
 	rsp := &struct {
-		ItemId uint `json:"item_id"`
+		ItemId int `json:"item_id"`
 	}{}
 	err := client.RequestWithParams("POST", path, nil, params, rsp)
 
 	return rsp.ItemId, err
 }
 
-func (client *Client) UpdateItem(itemId uint, fieldValues map[string]interface{}) error {
+func (client *Client) UpdateItem(itemId int, fieldValues map[string]interface{}) error {
 	path := fmt.Sprintf("/item/%d", itemId)
 	params := map[string]interface{}{
 		"fields": fieldValues,
