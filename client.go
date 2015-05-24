@@ -70,10 +70,7 @@ func (client *Client) Request(method string, path string, headers map[string]str
 	}
 
 	if out != nil {
-		err = json.Unmarshal(respBody, out)
-		if err != nil {
-			return err
-		}
+		return json.Unmarshal(respBody, out)
 	}
 
 	return nil
