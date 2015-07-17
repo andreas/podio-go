@@ -21,6 +21,7 @@ type Item struct {
 	CreatedOn          Time     `json:"created_on"`
 	Link               string   `json:"link"`
 	Revision           int      `json:"revision"`
+	Push               Push     `json:"push"`
 }
 
 // partialField is used for JSON unmarshalling

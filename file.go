@@ -13,6 +13,7 @@ type File struct {
 	Name string `json:"name"`
 	Link string `json:"link"`
 	Size int    `json:"size"`
+	Push Push   `json:"push"`
 }
 
 func (client *Client) GetFiles() (files []File, err error) {
