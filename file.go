@@ -9,7 +9,7 @@ import (
 )
 
 type File struct {
-	Id   int    `json:"file_id"`
+	Id   int64  `json:"file_id"`
 	Name string `json:"name"`
 	Link string `json:"link"`
 	Size int    `json:"size"`
@@ -20,8 +20,8 @@ func (client *Client) GetFiles() (files []File, err error) {
 	return
 }
 
-func (client *Client) GetFile(file_id int) (file *File, err error) {
-	err = client.Request("GET", fmt.Sprintf("/file/%d", file_id), nil, nil, &file)
+func (client *Client) GetFile(fileId int) (file *File, err error) {
+	err = client.Request("GET", fmt.Sprintf("/file/%d", fileId), nil, nil, &file)
 	return
 }
 

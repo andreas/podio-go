@@ -2,7 +2,7 @@ package podio
 
 // ByLine describes the creator of a Podio object
 type ByLine struct {
-	Id         int    `json:"id"`
+	Id         int64  `json:"id"`
 	Type       string `json:"type"`
 	Name       string `json:"name"`
 	URL        string `json:"url"`
@@ -16,7 +16,7 @@ type ByLine struct {
 
 // Via describes the source of a Podio object
 type Via struct {
-	Id      int    `json:"id"`
+	Id      int64  `json:"id"`
 	Name    string `json:"name"`
 	URL     string `json:"url"`
 	Display bool   `json:"display"`

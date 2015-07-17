@@ -5,7 +5,7 @@ import "fmt"
 // Comment is a comment on an object in podio.
 // The object to which this comment is associated is described in this Reference.
 type Comment struct {
-	Id         int        `json:"comment_id"`
+	Id         int64      `json:"comment_id"`
 	ExternalId string     `json:"external_id"`
 	Value      string     `json:"value"`
 	Ref        *Reference `json:"ref"`
@@ -22,7 +22,7 @@ type Comment struct {
 // refType (item, task, ...) and refId identifies the podio object to which the comment is added.
 // text is the actual comment value.
 // Additional parameters can be set in the params map.
-func (client *Client) Comment(refType string, refId int, text string, params map[string]interface{}) (*Comment, error) {
+func (client *Client) Comment(refType string, refId int64, text string, params map[string]interface{}) (*Comment, error) {
 	path := fmt.Sprintf("/comment/%s/%d/", refType, refId)
 	if params == nil {
 		params = map[string]interface{}{}
@@ -38,7 +38,7 @@ func (client *Client) Comment(refType string, refId int, text string, params map
 //
 // refType is the type of the podio object. For legal type values see
 // refId is the podio id of the podio object.
-func (client *Client) GetComments(refType string, refId int) (comments []*Comment, err error) {
+func (client *Client) GetComments(refType string, refId int64) (comments []*Comment, err error) {
 	path := fmt.Sprintf("/comment/%s/%d/", refType, refId)
 	err = client.Request("GET", path, nil, nil, &comments)
 	return

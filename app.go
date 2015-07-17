@@ -3,7 +3,7 @@ package podio
 import "fmt"
 
 type App struct {
-	Id              int    `json:"app_id"`
+	Id              int64  `json:"app_id"`
 	Name            string `json:"name"`
 	Status          string `json:"status"`
 	DefaultViewId   int    `json:"default_view_id"`
@@ -19,19 +19,19 @@ type App struct {
 	Icon            string `json:"icon"`
 }
 
-func (client *Client) GetApps(spaceId int) (apps []App, err error) {
+func (client *Client) GetApps(spaceId int64) (apps []App, err error) {
 	path := fmt.Sprintf("/app/space/%d?view=micro", spaceId)
 	err = client.Request("GET", path, nil, nil, &apps)
 	return
 }
 
-func (client *Client) GetApp(id int) (app *App, err error) {
+func (client *Client) GetApp(id int64) (app *App, err error) {
 	path := fmt.Sprintf("/app/%d?view=micro", id)
 	err = client.Request("GET", path, nil, nil, &app)
 	return
 }
 
-func (client *Client) GetAppBySpaceIdAndSlug(spaceId int, slug string) (app *App, err error) {
+func (client *Client) GetAppBySpaceIdAndSlug(spaceId int64, slug string) (app *App, err error) {
 	path := fmt.Sprintf("/app/space/%d/%s", spaceId, slug)
 	err = client.Request("GET", path, nil, nil, &app)
 	return
