@@ -3,7 +3,7 @@ package podio
 import "fmt"
 
 type Organization struct {
-	Id   uint   `json:"org_id"`
+	Id   int64  `json:"org_id"`
 	Slug string `json:"url_label"`
 	Name string `json:"name"`
 }
@@ -13,7 +13,7 @@ func (client *Client) GetOrganizations() (orgs []Organization, err error) {
 	return
 }
 
-func (client *Client) GetOrganization(id uint) (org *Organization, err error) {
+func (client *Client) GetOrganization(id int64) (org *Organization, err error) {
 	path := fmt.Sprintf("/org/%d", id)
 	err = client.Request("GET", path, nil, nil, &org)
 	return

@@ -27,6 +27,52 @@ func main() {
 
 See [example/main.go](example/main.go).
 
+## Item Field Values
+
+The values of an item field depend on the type of the field. As such, the type of `Field.Values` is `interface{}` and must be coerced to access. The mapping from field types to values are as follows:
+
+- `app`: `[]AppValue`
+- `date`: `[]DateValue`
+- `text`: `[]TextValue`
+- `number`: `[]NumberValue`
+- `image`: `[]ImageValue`
+- `member`: `[]MemberValue`
+- `contact`: `[]ContactValue`
+- `money`: `[]MoneyValue`
+- `progress`: `[]ProgressValue`
+- `location`: `[]LocationValue`
+- `video`: `[]VideoValue`
+- `duration`: `[]DurationValue`
+- `embed`: `[]EmbedValue`
+- `question`: `[]QuestionValue`
+- `category`: `[]CategoryValue`
+- `tel`: `[]TelValue`
+- `calculation`: `[]CalculationValue`
+
+Coercing `Field.Values` safely can be done with a `switch` on `Field.Type` using the above mapping, or a type switch on `Field.Values`:
+
+```go
+// Example 1
+switch field.Type {
+case "app":
+  for _, appVal := range field.Values.([]AppValue) {
+    fmt.Println(appVal.Value.AppItemId)
+  }
+case "date":
+  // etc
+}
+
+// Example 2
+switch values := field.Values {
+case []AppValue:
+	for _, appVal := range values {
+		fmt.Println(values[0].Value.AppItemId)
+	}
+case []DateValue:
+  // etc
+}
+```
+
 ## Status
 
 - The client supports authentication with username and password (see [Username and Password flow](https://developers.podio.com/authentication/username_password)), app authentication (see [App authentication flow](https://developers.podio.com/authentication/app_auth)) and server-side flow (see [Server-side flow](https://developers.podio.com/authentication/server_side)).

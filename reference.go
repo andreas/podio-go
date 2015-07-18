@@ -2,7 +2,7 @@ package podio
 
 // Reference is a reference to from one object to another Podio object
 type Reference struct {
-	Id       uint                   `json:"id"`
+	Id       int                    `json:"id"`
 	Type     string                 `json:"type"`
 	TypeName string                 `json:"type_name"`
 	Title    string                 `json:"title"`
