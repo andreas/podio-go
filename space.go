@@ -9,6 +9,7 @@ type Space struct {
 	URL      string `json:"url"`
 	URLLabel string `json:"url_label"`
 	OrgId    int64  `json:"org_id"`
+	Push     Push   `json:"push"`
 }
 
 func (client *Client) GetSpaces(orgId int64) (spaces []Space, err error) {
