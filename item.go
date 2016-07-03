@@ -207,6 +207,18 @@ func (client *Client) GetItems(appId int64) (items *ItemList, err error) {
 	return
 }
 
+// https://developers.podio.com/doc/items/export-items-4235696
+func (client *Client) ExportItems(appId int, exportFormat string, params map[string]interface{}) (int64, error) {
+	path := fmt.Sprintf("/item/app/%d/export/%s", appId, exportFormat)
+	rsp := &struct {
+		BatchId int64 `json:"batch_id"`
+	}{}
+
+	err := client.RequestWithParams("POST", path, nil, params, rsp)
+
+	return rsp.BatchId, err
+}
+
 func (client *Client) GetItemByAppItemId(appId int64, formattedAppItemId string) (item *Item, err error) {
 	path := fmt.Sprintf("/app/%d/item/%s", appId, formattedAppItemId)
 	err = client.Request("GET", path, nil, nil, &item)
