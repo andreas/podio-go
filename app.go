@@ -36,3 +36,10 @@ func (client *Client) GetAppBySpaceIdAndSlug(spaceId int64, slug string) (app *A
 	err = client.Request("GET", path, nil, nil, &app)
 	return
 }
+
+// https://developers.podio.com/doc/applications/get-space-app-dependencies-45779
+func (client *Client) GetSpaceDependencies(spaceId int64) (response *interface{}, err error) {
+	path := fmt.Sprintf("/space/%d/dependencies", spaceId)
+	err = client.Request("GET", path, nil, nil, &response)
+	return
+}
