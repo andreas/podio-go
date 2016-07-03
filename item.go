@@ -201,30 +201,35 @@ type ItemList struct {
 	Items    []*Item `json:"items"`
 }
 
+// https://developers.podio.com/doc/items/filter-items-4496747
 func (client *Client) GetItems(appId int64) (items *ItemList, err error) {
 	path := fmt.Sprintf("/item/app/%d/filter?fields=items.fields(files)", appId)
 	err = client.Request("POST", path, nil, nil, &items)
 	return
 }
 
+// https://developers.podio.com/doc/items/get-item-by-app-item-id-66506688
 func (client *Client) GetItemByAppItemId(appId int64, formattedAppItemId string) (item *Item, err error) {
 	path := fmt.Sprintf("/app/%d/item/%s", appId, formattedAppItemId)
 	err = client.Request("GET", path, nil, nil, &item)
 	return
 }
 
+// https://developers.podio.com/doc/items/get-item-by-external-id-19556702
 func (client *Client) GetItemByExternalID(appId int64, externalId string) (item *Item, err error) {
 	path := fmt.Sprintf("/item/app/%d/external_id/%s", appId, externalId)
 	err = client.Request("GET", path, nil, nil, &item)
 	return
 }
 
+// https://developers.podio.com/doc/items/get-item-22360
 func (client *Client) GetItem(itemId int64) (item *Item, err error) {
 	path := fmt.Sprintf("/item/%d?fields=files", itemId)
 	err = client.Request("GET", path, nil, nil, &item)
 	return
 }
 
+// https://developers.podio.com/doc/items/add-new-item-22362
 func (client *Client) CreateItem(appId int, externalId string, fieldValues map[string]interface{}) (int64, error) {
 	path := fmt.Sprintf("/item/app/%d", appId)
 	params := map[string]interface{}{
@@ -243,6 +248,7 @@ func (client *Client) CreateItem(appId int, externalId string, fieldValues map[s
 	return rsp.ItemId, err
 }
 
+// https://developers.podio.com/doc/items/update-item-22363
 func (client *Client) UpdateItem(itemId int, fieldValues map[string]interface{}) error {
 	path := fmt.Sprintf("/item/%d", itemId)
 	params := map[string]interface{}{
