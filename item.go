@@ -229,7 +229,6 @@ func (client *Client) GetItem(itemId int64) (item *Item, err error) {
 	return
 }
 
-
 // https://developers.podio.com/doc/items/add-new-item-22362
 func (client *Client) CreateItem(appId int, externalId string, fieldValues map[string]interface{}) (int64, error) {
 	path := fmt.Sprintf("/item/app/%d", appId)
