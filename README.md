@@ -63,7 +63,7 @@ case "date":
 }
 
 // Example 2
-switch values := field.Values {
+switch values := field.Values.(type) {
 case []AppValue:
 	for _, appVal := range values {
 		fmt.Println(values[0].Value.AppItemId)
