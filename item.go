@@ -39,58 +39,96 @@ type Field struct {
 	Values interface{}
 }
 
+func (f *Field) unmarshalValuesInto(out interface{}) error {
+	if err := json.Unmarshal(f.ValuesJSON, &out); err != nil {
+		return fmt.Errorf("[ERR] Cannot unmarshal %s into %s: %v\n", f.ValuesJSON, reflect.TypeOf(out), err)
+	}
+	return nil
+}
+
 func (f *Field) UnmarshalJSON(data []byte) error {
-	pField := partialField{}
-	if err := json.Unmarshal(data, &pField); err != nil {
+	f.partialField = partialField{}
+	if err := json.Unmarshal(data, &f.partialField); err != nil {
 		return err
 	}
 
-	switch pField.Type {
+	switch f.Type {
 	case "app":
-		f.Values = []AppValue{}
+		values := []AppValue{}
+		f.unmarshalValuesInto(&values)
+		f.Values = values
 	case "date":
-		f.Values = []DateValue{}
+		values := []DateValue{}
+		f.unmarshalValuesInto(&values)
+		f.Values = values
 	case "text":
-		f.Values = []TextValue{}
+		values := []TextValue{}
+		f.unmarshalValuesInto(&values)
+		f.Values = values
 	case "number":
-		f.Values = []NumberValue{}
+		values := []NumberValue{}
+		f.unmarshalValuesInto(&values)
+		f.Values = values
 	case "image":
-		f.Values = []ImageValue{}
+		values := []ImageValue{}
+		f.unmarshalValuesInto(&values)
+		f.Values = values
 	case "member":
-		f.Values = []MemberValue{}
+		values := []MemberValue{}
+		f.unmarshalValuesInto(&values)
+		f.Values = values
 	case "contact":
-		f.Values = []ContactValue{}
+		values := []ContactValue{}
+		f.unmarshalValuesInto(&values)
+		f.Values = values
 	case "money":
-		f.Values = []MoneyValue{}
+		values := []MoneyValue{}
+		f.unmarshalValuesInto(&values)
+		f.Values = values
 	case "progress":
-		f.Values = []ProgressValue{}
+		values := []ProgressValue{}
+		f.unmarshalValuesInto(&values)
+		f.Values = values
 	case "location":
-		f.Values = []LocationValue{}
+		values := []LocationValue{}
+		f.unmarshalValuesInto(&values)
+		f.Values = values
 	case "video":
-		f.Values = []VideoValue{}
+		values := []VideoValue{}
+		f.unmarshalValuesInto(&values)
+		f.Values = values
 	case "duration":
-		f.Values = []DurationValue{}
+		values := []DurationValue{}
+		f.unmarshalValuesInto(&values)
+		f.Values = values
 	case "embed":
-		f.Values = []EmbedValue{}
+		values := []EmbedValue{}
+		f.unmarshalValuesInto(&values)
+		f.Values = values
 	case "question":
-		f.Values = []QuestionValue{}
+		values := []QuestionValue{}
+		f.unmarshalValuesInto(&values)
+		f.Values = values
 	case "category":
-		f.Values = []CategoryValue{}
+		values := []CategoryValue{}
+		f.unmarshalValuesInto(&values)
+		f.Values = values
 	case "tel":
-		f.Values = []TelValue{}
+		values := []TelValue{}
+		f.unmarshalValuesInto(&values)
+		f.Values = values
 	case "calculation":
-		f.Values = []CalculationValue{}
+		values := []CalculationValue{}
+		f.unmarshalValuesInto(&values)
+		f.Values = values
 	default:
 		// Unknown field type
-		f.Values = []interface{}{}
+		values := []interface{}{}
+		f.unmarshalValuesInto(&values)
+		f.Values = values
 	}
 
-	if err := json.Unmarshal(pField.ValuesJSON, &f.Values); err != nil {
-		return fmt.Errorf("[ERR] Cannot unmarshal %s into %s: %v\n", string(pField.ValuesJSON), reflect.TypeOf(f.Values), err)
-	}
-
-	pField.ValuesJSON = nil
-	f.partialField = pField
+	f.ValuesJSON = nil
 	return nil
 }
 
