@@ -209,7 +209,7 @@ func (client *Client) GetItems(appId int64) (items *ItemList, err error) {
 }
 
 // https://developers.podio.com/doc/items/filter-items-4496747
-func (client *Client) filterItems(appId int64, params map[string]interface{}) (items *ItemList, err error) {
+func (client *Client) FilterItems(appId int64, params map[string]interface{}) (items *ItemList, err error) {
 	path := fmt.Sprintf("/item/app/%d/filter?fields=items.fields(files)", appId)
 	err = client.RequestWithParams("POST", path, nil, params, &items)
 	return
