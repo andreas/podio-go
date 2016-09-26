@@ -208,6 +208,13 @@ func (client *Client) GetItems(appId int64) (items *ItemList, err error) {
 	return
 }
 
+// https://developers.podio.com/doc/items/filter-items-4496747
+func (client *Client) filterItems(appId int64, params map[string]interface{}) (items *ItemList, err error) {
+	path := fmt.Sprintf("/item/app/%d/filter?fields=items.fields(files)", appId)
+	err = client.RequestWithParams("POST", path, nil, params, &items)
+	return
+}
+
 // https://developers.podio.com/doc/items/get-item-by-app-item-id-66506688
 func (client *Client) GetItemByAppItemId(appId int64, formattedAppItemId string) (item *Item, err error) {
 	path := fmt.Sprintf("/app/%d/item/%s", appId, formattedAppItemId)
