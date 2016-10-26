@@ -256,11 +256,18 @@ func (client *Client) CreateItem(appId int, externalId string, fieldValues map[s
 }
 
 // https://developers.podio.com/doc/items/update-item-22363
-func (client *Client) UpdateItem(itemId int, fieldValues map[string]interface{}) error {
+func (client *Client) UpdateItem(itemId int64, fieldValues map[string]interface{}) error {
 	path := fmt.Sprintf("/item/%d", itemId)
 	params := map[string]interface{}{
 		"fields": fieldValues,
 	}
 
 	return client.RequestWithParams("PUT", path, nil, params, nil)
+}
+
+// Delete the item with itemId
+// https://developers.podio.com/doc/items/delete-item-22364
+func (client *Client) DeleteItem(itemId int64) error {
+	path := fmt.Sprintf("/item/%d", itemId)
+	return client.Request("DELETE", path, nil, nil, nil)
 }
