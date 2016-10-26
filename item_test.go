@@ -26,6 +26,7 @@ func init() {
 //  - The test app must contain:
 //    - A text field as the first field (title field)
 //    - A single-choice, non-required category field (category labels are not important)
+// - Run with `go test -v -app.id $APP_ID -app.secret $APP_SECREET -client.id $CLIENT_ID -client.secret $CLIENT_SECRET`
 
 func getPodioAuth(t *testing.T) *AuthToken {
 	if appId == 0 || appSecret == "" || clientId == "" || clientSecret == "" {
