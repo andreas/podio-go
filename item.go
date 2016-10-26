@@ -44,49 +44,93 @@ func (f *Field) UnmarshalJSON(data []byte) error {
 	if err := json.Unmarshal(data, &pField); err != nil {
 		return err
 	}
+	var err error
+	// short-hand
+	dec := func(v interface{}) {
+		if err = json.Unmarshal(pField.ValuesJSON, v); err != nil {
+			err = fmt.Errorf("[ERR] Cannot unmarshal %s into %s: %v\n", string(pField.ValuesJSON), reflect.TypeOf(v), err)
+		}
+
+	}
 
 	switch pField.Type {
 	case "app":
-		f.Values = []AppValue{}
+		v := []AppValue{}
+		dec(&v)
+		f.Values = v
 	case "date":
-		f.Values = []DateValue{}
+		v := []DateValue{}
+		dec(&v)
+		f.Values = v
 	case "text":
-		f.Values = []TextValue{}
+		v := []TextValue{}
+		dec(&v)
+		f.Values = v
 	case "number":
-		f.Values = []NumberValue{}
+		v := []NumberValue{}
+		dec(&v)
+		f.Values = v
 	case "image":
-		f.Values = []ImageValue{}
+		v := []ImageValue{}
+		dec(&v)
+		f.Values = v
 	case "member":
-		f.Values = []MemberValue{}
+		v := []MemberValue{}
+		dec(&v)
+		f.Values = v
 	case "contact":
-		f.Values = []ContactValue{}
+		v := []ContactValue{}
+		dec(&v)
+		f.Values = v
 	case "money":
-		f.Values = []MoneyValue{}
+		v := []MoneyValue{}
+		dec(&v)
+		f.Values = v
 	case "progress":
-		f.Values = []ProgressValue{}
+		v := []ProgressValue{}
+		dec(&v)
+		f.Values = v
 	case "location":
-		f.Values = []LocationValue{}
+		v := []LocationValue{}
+		dec(&v)
+		f.Values = v
 	case "video":
-		f.Values = []VideoValue{}
+		v := []VideoValue{}
+		dec(&v)
+		f.Values = v
 	case "duration":
-		f.Values = []DurationValue{}
+		v := []DurationValue{}
+		dec(&v)
+		f.Values = v
 	case "embed":
-		f.Values = []EmbedValue{}
+		v := []EmbedValue{}
+		dec(&v)
+		f.Values = v
 	case "question":
-		f.Values = []QuestionValue{}
+		v := []QuestionValue{}
+		dec(&v)
+		f.Values = v
 	case "category":
-		f.Values = []CategoryValue{}
+		v := []CategoryValue{}
+		dec(&v)
+		f.Values = v
 	case "tel":
-		f.Values = []TelValue{}
+		v := []TelValue{}
+		dec(&v)
+		f.Values = v
 	case "calculation":
-		f.Values = []CalculationValue{}
+		v := []CalculationValue{}
+		dec(&v)
+		f.Values = v
 	default:
 		// Unknown field type
-		f.Values = []interface{}{}
+		v := []interface{}{}
+		dec(&v)
+		f.Values = v
 	}
 
-	if err := json.Unmarshal(pField.ValuesJSON, &f.Values); err != nil {
-		return fmt.Errorf("[ERR] Cannot unmarshal %s into %s: %v\n", string(pField.ValuesJSON), reflect.TypeOf(f.Values), err)
+	if err != nil {
+		return err
 	}
 
 	pField.ValuesJSON = nil
@@ -256,11 +300,18 @@ func (client *Client) CreateItem(appId int, externalId string, fieldValues map[s
 }
 
 // https://developers.podio.com/doc/items/update-item-22363
-func (client *Client) UpdateItem(itemId int, fieldValues map[string]interface{}) error {
+func (client *Client) UpdateItem(itemId int64, fieldValues map[string]interface{}) error {
 	path := fmt.Sprintf("/item/%d", itemId)
 	params := map[string]interface{}{
 		"fields": fieldValues,
 	}
 
 	return client.RequestWithParams("PUT", path, nil, params, nil)
+}
+
+// Delete the item with itemId
+// https://developers.podio.com/doc/items/delete-item-22364
+func (client *Client) DeleteItem(itemId int64) error {
+	path := fmt.Sprintf("/item/%d", itemId)
+	return client.Request("DELETE", path, nil, nil, nil)
 }
