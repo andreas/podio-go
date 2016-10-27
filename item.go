@@ -121,6 +121,14 @@ func (f *Field) UnmarshalJSON(data []byte) error {
 		values := []CalculationValue{}
 		f.unmarshalValuesInto(&values)
 		f.Values = values
+	case "email":
+		values := []EmailValue{}
+		f.unmarshalValuesInto(&values)
+		f.Values = values
+	case "phone":
+		values := []PhoneValue{}
+		f.unmarshalValuesInto(&values)
+		f.Values = values
 	default:
 		// Unknown field type
 		values := []interface{}{}
@@ -228,6 +236,23 @@ type QuestionValue struct {
 type TelValue struct {
 	Value int    `json:"value"`
 	URI   string `json:"uri"`
+}
+
+// EmailValue is values for email fields.
+type EmailValue struct {
+	// Type is the use of the email. Possible values are other, home or work
+	Type string `json:"type"`
+	// The actual email: jill@example.com
+	Value string `json:"value"`
+}
+
+// PhoneValue contains the value for phone fields.
+type PhoneValue struct {
+	// Type is the use of the phone field. Possible values are
+	// mobile, work, home, main, work_fax, private, fax or other
+	Type string `json:"type"`
+	// Value contains the phone number itself
+	Value string `json:"value"`
 }
 
 // CalcationValue is the value for fields of type `calculation` (currently untyped)
