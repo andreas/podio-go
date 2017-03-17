@@ -4,7 +4,6 @@ import "fmt"
 
 type Space struct {
 	Id       int64  `json:"space_id"`
-	Slug     string `json:"url_label"`
 	Name     string `json:"name"`
 	URL      string `json:"url"`
 	URLLabel string `json:"url_label"`
