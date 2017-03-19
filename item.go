@@ -3,7 +3,6 @@ package podio
 import (
 	"encoding/json"
 	"fmt"
-	"reflect"
 )
 
 // Item describes a Podio item object
@@ -22,14 +21,24 @@ type Item struct {
 	Link               string   `json:"link"`
 	Revision           int      `json:"revision"`
 	Push               Push     `json:"push"`
+	ExternalId         string   `json:"external_id"`
 }
 
 // partialField is used for JSON unmarshalling
 type partialField struct {
-	Id         int64           `json:"field_id"`
-	ExternalId string          `json:"external_id"`
-	Type       string          `json:"type"`
-	Label      string          `json:"label"`
+	Id         int64  `json:"field_id"`
+	ExternalId string `json:"external_id"`
+	Type       string `json:"type"`
+	Label      string `json:"label"`
+	Config     struct {
+		Description   string          `json:"description"`
+		Required      bool            `json:"required"`
+		HiddenIfEmpty bool            `json:"hidden"`
+		AlwaysHidden  bool            `json:"hidden_create_view_edit"`
+		ConfigVersion int             `json:"delta"`
+		SettingsJSON  json.RawMessage `json:"settings"`
+		Settings      interface{}     `json:"-"`
+	} `json:"config"`
 	ValuesJSON json.RawMessage `json:"values"`
 }
 
@@ -39,9 +48,13 @@ type Field struct {
 	Values interface{}
 }
 
-func (f *Field) unmarshalValuesInto(out interface{}) error {
-	if err := json.Unmarshal(f.ValuesJSON, &out); err != nil {
-		return fmt.Errorf("[ERR] Cannot unmarshal %s into %s: %v\n", f.ValuesJSON, reflect.TypeOf(out), err)
+func (f *Field) unmarshalInto(val, settings interface{}) error {
+	if err := json.Unmarshal(f.ValuesJSON, val); err != nil {
+		return fmt.Errorf("cannot unmarshal %q into %T: %v", f.ValuesJSON, val, err)
+	}
+
+	if err := json.Unmarshal(f.Config.SettingsJSON, settings); err != nil && settings != nil {
+		return fmt.Errorf("cannot unmarshal %q into %T: %v", f.Config.SettingsJSON, settings, err)
 	}
 	return nil
 }
@@ -54,77 +67,77 @@ func (f *Field) UnmarshalJSON(data []byte) error {
 
 	switch f.Type {
 	case "app":
-		values := []AppValue{}
-		f.unmarshalValuesInto(&values)
-		f.Values = values
+		values, cfg := []AppValue{}, AppFieldSettings{}
+		f.unmarshalInto(&values, &cfg)
+		f.Values, f.Config.Settings = values, cfg
 	case "date":
 		values := []DateValue{}
-		f.unmarshalValuesInto(&values)
+		f.unmarshalInto(&values, nil)
 		f.Values = values
 	case "text":
-		values := []TextValue{}
-		f.unmarshalValuesInto(&values)
-		f.Values = values
+		values, cfg := []TextValue{}, TextFieldSettings{}
+		f.unmarshalInto(&values, &cfg)
+		f.Values, f.Config.Settings = values, cfg
 	case "number":
 		values := []NumberValue{}
-		f.unmarshalValuesInto(&values)
+		f.unmarshalInto(&values, nil)
 		f.Values = values
 	case "image":
 		values := []ImageValue{}
-		f.unmarshalValuesInto(&values)
+		f.unmarshalInto(&values, nil)
 		f.Values = values
 	case "member":
 		values := []MemberValue{}
-		f.unmarshalValuesInto(&values)
+		f.unmarshalInto(&values, nil)
 		f.Values = values
 	case "contact":
 		values := []ContactValue{}
-		f.unmarshalValuesInto(&values)
+		f.unmarshalInto(&values, nil)
 		f.Values = values
 	case "money":
 		values := []MoneyValue{}
-		f.unmarshalValuesInto(&values)
+		f.unmarshalInto(&values, nil)
 		f.Values = values
 	case "progress":
 		values := []ProgressValue{}
-		f.unmarshalValuesInto(&values)
+		f.unmarshalInto(&values, nil)
 		f.Values = values
 	case "location":
 		values := []LocationValue{}
-		f.unmarshalValuesInto(&values)
+		f.unmarshalInto(&values, nil)
 		f.Values = values
 	case "video":
 		values := []VideoValue{}
-		f.unmarshalValuesInto(&values)
+		f.unmarshalInto(&values, nil)
 		f.Values = values
 	case "duration":
 		values := []DurationValue{}
-		f.unmarshalValuesInto(&values)
+		f.unmarshalInto(&values, nil)
 		f.Values = values
 	case "embed":
 		values := []EmbedValue{}
-		f.unmarshalValuesInto(&values)
+		f.unmarshalInto(&values, nil)
 		f.Values = values
 	case "question":
 		values := []QuestionValue{}
-		f.unmarshalValuesInto(&values)
+		f.unmarshalInto(&values, nil)
 		f.Values = values
 	case "category":
-		values := []CategoryValue{}
-		f.unmarshalValuesInto(&values)
-		f.Values = values
+		values, cfg := []CategoryValue{}, CategoryFieldSettings{}
+		f.unmarshalInto(&values, &cfg)
+		f.Values, f.Config.Settings = values, cfg
 	case "tel":
 		values := []TelValue{}
-		f.unmarshalValuesInto(&values)
+		f.unmarshalInto(&values, nil)
 		f.Values = values
 	case "calculation":
 		values := []CalculationValue{}
-		f.unmarshalValuesInto(&values)
+		f.unmarshalInto(&values, nil)
 		f.Values = values
 	default:
 		// Unknown field type
 		values := []interface{}{}
-		f.unmarshalValuesInto(&values)
+		f.unmarshalInto(&values, nil)
 		f.Values = values
 	}
 
@@ -135,6 +148,14 @@ func (f *Field) UnmarshalJSON(data []byte) error {
 // TextValue is the value for fields of type `text`
 type TextValue struct {
 	Value string `json:"value"`
+}
+
+// TextFieldSettings is the configuration of a text field
+type TextFieldSettings struct {
+	Settings struct {
+		Format string `json:"format"`
+		Size   string `json:"format"`
+	} `json:"settings"`
 }
 
 // NumberValue is the value for fields of type `number`
@@ -156,6 +177,16 @@ type DateValue struct {
 // AppValue is the value for fields of type `app`
 type AppValue struct {
 	Value Item `json:"value"`
+}
+
+// AppFieldSettings configures an app field
+type AppFieldSettings struct {
+	Mulitple       bool `json:"multiple"`
+	ReferencedApps []struct {
+		ViewId int `json:"view_id"`
+		AppId  int `json:"app_id"`
+		App    App `json:"app"`
+	} `json:"referenced_apps"`
 }
 
 // MemberValue is the value for fields of type `member`
@@ -209,14 +240,25 @@ type EmbedValue struct {
 	File  File  `json:"file"`
 }
 
+// CategoryOption is a possible value for a category field
+type CategoryOption struct {
+	Status string `json:"status"`
+	Text   string `json:"text"`
+	Id     int    `json:"id"`
+	Color  string `json:"color"`
+}
+
 // CategoryValue is the value for fields of type `category`
 type CategoryValue struct {
-	Value struct {
-		Status string `json:"status"`
-		Text   string `json:"text"`
-		Id     int    `json:"id"`
-		Color  string `json:"color"`
-	} `json:"value"`
+	Value CategoryOption `json:"value"`
+}
+
+// CategoryFieldSettings holds the configuration of category fields, along with
+// the possible values for the category field.
+type CategoryFieldSettings struct {
+	Multiple bool   `json:"multiple"`
+	Display  string `json:"display"`
+	Options  []CategoryOption
 }
 
 // QuestionValue is the value for fields of type `question`
