@@ -53,9 +53,13 @@ func (f *Field) unmarshalInto(val, settings interface{}) error {
 		return fmt.Errorf("cannot unmarshal %q into %T: %v", f.ValuesJSON, val, err)
 	}
 
-	if err := json.Unmarshal(f.Config.SettingsJSON, settings); err != nil && settings != nil {
-		return fmt.Errorf("cannot unmarshal %q into %T: %v", f.Config.SettingsJSON, settings, err)
+	// allow for tests that does not set field configs.
+	if settings != nil && len(f.Config.SettingsJSON) > 0 {
+		if err := json.Unmarshal(f.Config.SettingsJSON, settings); err != nil {
+			return fmt.Errorf("cannot unmarshal %q into %T: %v", f.Config.SettingsJSON, settings, err)
+		}
 	}
+
 	return nil
 }
 
@@ -64,81 +68,85 @@ func (f *Field) UnmarshalJSON(data []byte) error {
 	if err := json.Unmarshal(data, &f.partialField); err != nil {
 		return err
 	}
+	var err error
 
 	switch f.Type {
 	case "app":
 		values, cfg := []AppValue{}, AppFieldSettings{}
-		f.unmarshalInto(&values, &cfg)
+		err = f.unmarshalInto(&values, &cfg)
 		f.Values, f.Config.Settings = values, cfg
 	case "date":
 		values := []DateValue{}
-		f.unmarshalInto(&values, nil)
+		err = f.unmarshalInto(&values, nil)
 		f.Values = values
 	case "text":
 		values, cfg := []TextValue{}, TextFieldSettings{}
-		f.unmarshalInto(&values, &cfg)
+		err = f.unmarshalInto(&values, &cfg)
 		f.Values, f.Config.Settings = values, cfg
 	case "number":
 		values := []NumberValue{}
-		f.unmarshalInto(&values, nil)
+		err = f.unmarshalInto(&values, nil)
 		f.Values = values
 	case "image":
 		values := []ImageValue{}
-		f.unmarshalInto(&values, nil)
+		err = f.unmarshalInto(&values, nil)
 		f.Values = values
 	case "member":
 		values := []MemberValue{}
-		f.unmarshalInto(&values, nil)
+		err = f.unmarshalInto(&values, nil)
 		f.Values = values
 	case "contact":
 		values := []ContactValue{}
-		f.unmarshalInto(&values, nil)
+		err = f.unmarshalInto(&values, nil)
 		f.Values = values
 	case "money":
 		values := []MoneyValue{}
-		f.unmarshalInto(&values, nil)
+		err = f.unmarshalInto(&values, nil)
 		f.Values = values
 	case "progress":
 		values := []ProgressValue{}
-		f.unmarshalInto(&values, nil)
+		err = f.unmarshalInto(&values, nil)
 		f.Values = values
 	case "location":
 		values := []LocationValue{}
-		f.unmarshalInto(&values, nil)
+		err = f.unmarshalInto(&values, nil)
 		f.Values = values
 	case "video":
 		values := []VideoValue{}
-		f.unmarshalInto(&values, nil)
+		err = f.unmarshalInto(&values, nil)
 		f.Values = values
 	case "duration":
 		values := []DurationValue{}
-		f.unmarshalInto(&values, nil)
+		err = f.unmarshalInto(&values, nil)
 		f.Values = values
 	case "embed":
 		values := []EmbedValue{}
-		f.unmarshalInto(&values, nil)
+		err = f.unmarshalInto(&values, nil)
 		f.Values = values
 	case "question":
 		values := []QuestionValue{}
-		f.unmarshalInto(&values, nil)
+		err = f.unmarshalInto(&values, nil)
 		f.Values = values
 	case "category":
 		values, cfg := []CategoryValue{}, CategoryFieldSettings{}
-		f.unmarshalInto(&values, &cfg)
+		err = f.unmarshalInto(&values, &cfg)
 		f.Values, f.Config.Settings = values, cfg
 	case "tel":
 		values := []TelValue{}
-		f.unmarshalInto(&values, nil)
+		err = f.unmarshalInto(&values, nil)
 		f.Values = values
 	case "calculation":
 		values := []CalculationValue{}
-		f.unmarshalInto(&values, nil)
+		err = f.unmarshalInto(&values, nil)
 		f.Values = values
 	default:
 		// Unknown field type
-		values := []interface{}{}
-		f.unmarshalInto(&values, nil)
+		values, cfg := []interface{}{}, map[string]interface{}{}
+		err = f.unmarshalInto(&values, &cfg)
 		f.Values = values
+	}
+	if err != nil {
+		return err
 	}
 
 	f.ValuesJSON = nil
@@ -152,10 +160,8 @@ type TextValue struct {
 
 // TextFieldSettings is the configuration of a text field
 type TextFieldSettings struct {
-	Settings struct {
-		Format string `json:"format"`
-		Size   string `json:"format"`
-	} `json:"settings"`
+	Format string `json:"format"`
+	Size   string `json:"size"`
 }
 
 // NumberValue is the value for fields of type `number`
