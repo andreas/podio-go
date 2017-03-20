@@ -149,8 +149,8 @@ type ImageValue struct {
 
 // DateValue is the value for fields of type `date`
 type DateValue struct {
-	Start *Time `json:"start"`
-	End   *Time `json:"end"`
+	Start *Time `json:"start_utc"`
+	End   *Time `json:"end_utc"`
 }
 
 // AppValue is the value for fields of type `app`
