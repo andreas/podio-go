@@ -301,9 +301,9 @@ type QuestionValue struct {
 	Value int `json:"value"`
 }
 
-// TelValue is the value for fields of type `tel`
+// TelValue is the value for fields of type `tel`. This is a deprecated field type
 type TelValue struct {
-	Value int    `json:"value"`
+	Value string `json:"value"`
 	URI   string `json:"uri"`
 }
 

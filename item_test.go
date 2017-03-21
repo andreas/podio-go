@@ -125,6 +125,9 @@ func TestUnmarshalItemValues(t *testing.T) {
 				},
 			},
 		},
+		{
+			jsonFile: "fixtures/item_350017179.json",
+		},
 	}
 
 	for _, c := range testCases {
