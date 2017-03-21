@@ -63,6 +63,9 @@ func (f *Field) unmarshalInto(val, settings interface{}) error {
 	return nil
 }
 
+// Used during testing.
+var errOnUnknownField bool
+
 func (f *Field) UnmarshalJSON(data []byte) error {
 	f.partialField = partialField{}
 	if err := json.Unmarshal(data, &f.partialField); err != nil {
@@ -88,38 +91,40 @@ func (f *Field) UnmarshalJSON(data []byte) error {
 		err = f.unmarshalInto(&values, &cfg)
 		f.Values, f.Config.Settings = values, cfg
 	case "image":
-		values := []ImageValue{}
-		err = f.unmarshalInto(&values, nil)
-		f.Values = values
+		values, cfg := []ImageValue{}, ImageFieldSettings{}
+		err = f.unmarshalInto(&values, &cfg)
+		f.Values, f.Config.Settings = values, cfg
 	case "member":
 		values := []MemberValue{}
 		err = f.unmarshalInto(&values, nil)
 		f.Values = values
 	case "contact":
-		values := []ContactValue{}
-		err = f.unmarshalInto(&values, nil)
-		f.Values = values
+		values, cfg := []ContactValue{}, ContactFieldSettings{}
+		err = f.unmarshalInto(&values, &cfg)
+		f.Values, f.Config.Settings = values, cfg
 	case "money":
 		values, cfg := []MoneyValue{}, MoneyFieldSettings{}
 		err = f.unmarshalInto(&values, &cfg)
 		f.Values, f.Config.Settings = values, cfg
 	case "progress":
+		// progress fields has no field specific settings
 		values := []ProgressValue{}
 		err = f.unmarshalInto(&values, nil)
 		f.Values = values
 	case "location":
-		values := []LocationValue{}
-		err = f.unmarshalInto(&values, nil)
-		f.Values = values
+		values, cfg := []LocationValue{}, LocationFieldSettings{}
+		err = f.unmarshalInto(&values, &cfg)
+		f.Values, f.Config.Settings = values, cfg
 	case "video":
 		values := []VideoValue{}
 		err = f.unmarshalInto(&values, nil)
 		f.Values = values
 	case "duration":
-		values := []DurationValue{}
-		err = f.unmarshalInto(&values, nil)
-		f.Values = values
+		values, cfg := []DurationValue{}, DurationFieldSettings{}
+		err = f.unmarshalInto(&values, &cfg)
+		f.Values, f.Config.Settings = values, cfg
 	case "embed":
+		// embed fields has no field specific settings
 		values := []EmbedValue{}
 		err = f.unmarshalInto(&values, nil)
 		f.Values = values
@@ -136,9 +141,9 @@ func (f *Field) UnmarshalJSON(data []byte) error {
 		err = f.unmarshalInto(&values, nil)
 		f.Values = values
 	case "calculation":
-		values := []CalculationValue{}
-		err = f.unmarshalInto(&values, nil)
-		f.Values = values
+		values, cfg := []CalculationValue{}, CalculationFieldSettings{}
+		err = f.unmarshalInto(&values, &cfg)
+		f.Values, f.Config.Settings = values, cfg
 	case "phone":
 		values, cfg := []PhoneValue{}, PhoneFieldSettings{}
 		err = f.unmarshalInto(&values, &cfg)
@@ -148,6 +153,9 @@ func (f *Field) UnmarshalJSON(data []byte) error {
 		err = f.unmarshalInto(&values, &cfg)
 		f.Values, f.Config.Settings = values, cfg
 	default:
+		if errOnUnknownField {
+			return fmt.Errorf("unknown field type %q", f.Type)
+		}
 		// Unknown field type
 		values, cfg := []interface{}{}, map[string]interface{}{}
 		err = f.unmarshalInto(&values, &cfg)
@@ -186,6 +194,11 @@ type NumberFieldSettings struct {
 // Image is the value for fields of type `image`
 type ImageValue struct {
 	Value File `json:"value"`
+}
+
+// ImageFieldSettings describes which mime types are allowed on an image field
+type ImageFieldSettings struct {
+	AllowedMimeypes []string `json:"allowed_mimetypes"`
 }
 
 // DateValue is the value for fields of type `date`
@@ -237,6 +250,12 @@ type ContactValue struct {
 	Value Contact `json:"value"`
 }
 
+// ContactFieldSettings describes the kind of contacts allowed in a contact field
+type ContactFieldSettings struct {
+	Type       string   `json:"type"`
+	ValidTypes []string `json:"valid_types"`
+}
+
 // MoneyValue is the value for fields of type `money`
 type MoneyValue struct {
 	Value    float64 `json:"value,string"`
@@ -255,16 +274,22 @@ type ProgressValue struct {
 
 // LocationValue is the value for fields of type `location`
 type LocationValue struct {
-	Value        string `json:"value"`
-	Formatted    string `json:"formatted"`
-	StreetNumber string `json:"street_number"`
-	StreetName   string `json:"street_name"`
-	PostalCode   string `json:"postal_code"`
-	City         string `json:"city"`
-	State        string `json:"state"`
-	Country      string `json:"country"`
-	Lat          string `json:"lat"`
-	Lng          string `json:"lng"`
+	Value        string  `json:"value"`
+	Formatted    string  `json:"formatted"`
+	StreetNumber string  `json:"street_number"`
+	StreetName   string  `json:"street_name"`
+	PostalCode   string  `json:"postal_code"`
+	City         string  `json:"city"`
+	State        string  `json:"state"`
+	Country      string  `json:"country"`
+	Lat          float64 `json:"lat"`
+	Lng          float64 `json:"lng"`
+}
+
+// LocationFieldSettings defines whether or not to a map should be shown for a location field
+type LocationFieldSettings struct {
+	Structured bool `json:"structured"`
+	HasMap     bool `json:"has_map"`
 }
 
 // VideoValue is the value for fields of type `video`
@@ -275,6 +300,12 @@ type VideoValue struct {
 // DurationValue is the value for fields of type `duration`
 type DurationValue struct {
 	Value int `json:"value"`
+}
+
+// DurationFieldSettings defines which parts of the duration to render
+type DurationFieldSettings struct {
+	// Can be days, hours, minutes and/or seconds
+	Fields []string `json:"fields"`
 }
 
 // EmbedValue is the value for fields of type `embed`
@@ -340,8 +371,24 @@ type EmailFieldSettings struct {
 	PossibleTypes []string `json:"possible_types"`
 }
 
-// CalcationValue is the value for fields of type `calculation` (currently untyped)
-type CalculationValue map[string]interface{}
+// CalculationValue is the value for fields of type calculation
+type CalculationValue struct {
+	Value string `json:"value"`
+}
+
+// CalculationFieldSettings holds information about a calculation field, including the
+// script it runs and what return type it has.
+type CalculationFieldSettings struct {
+	Script     string `json:"script"`
+	ReturnType string `json:"return_type"`
+
+	Color      string `json:"color"`
+	Expression string `json:"expression"`
+	Time       string `json:"time"`
+	Calendar   string `json:"calendar"`
+	Decimals   int    `json:"decimals"`
+	Unit       string `json:"unit"`
+}
 
 type ItemList struct {
 	Filtered int     `json:"filtered"`
