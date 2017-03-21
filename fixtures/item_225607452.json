@@ -1,0 +1,553 @@
+{
+  "presence": {
+    "ref_type": "item",
+    "ref_id": 225607452,
+    "user_id": 2468975,
+    "signature": "dbb4c04b963a66204236490c060a6d25fd7d9aa4"
+  },
+  "app": {
+    "status": "active",
+    "name": "AllFields",
+    "default_view_id": null,
+    "url_add": "https://podio.com/podio/sandbox-4fcx2i/apps/allfields/items/new",
+    "icon_id": 251,
+    "link_add": "https://podio.com/podio/sandbox-4fcx2i/apps/allfields/items/new",
+    "app_id": 10421272,
+    "current_revision": 2,
+    "item_name": "Merge",
+    "link": "https://podio.com/podio/sandbox-4fcx2i/apps/allfields",
+    "url": "https://podio.com/podio/sandbox-4fcx2i/apps/allfields",
+    "url_label": "allfields",
+    "config": {
+      "item_name": "Merge",
+      "icon_id": 251,
+      "type": "standard",
+      "name": "AllFields",
+      "icon": "251.png"
+    },
+    "space_id": 2720177,
+    "icon": "251.png"
+  },
+  "user_ratings": {
+    "like": null
+  },
+  "created_on": "2014-12-10 15:25:32",
+  "like_count": 0,
+  "comments": [
+
+  ],
+  "last_event_on": "2014-12-10 15:25:32",
+  "linked_account_data": null,
+  "refs": [
+
+  ],
+  "app_item_id_formatted": "1",
+  "priority": 225607452.0,
+  "subscribed": true,
+  "title": "Title",
+  "tags": [
+
+  ],
+  "participants": {
+
+  },
+  "created_by": {
+    "user_id": 2468975,
+    "name": "Brian Stengaard",
+    "url": "https://podio.com/users/2468975",
+    "type": "user",
+    "image": {
+      "hosted_by": "podio",
+      "hosted_by_humanized_name": "Podio",
+      "thumbnail_link": "https://d2cmuesa4snpwn.cloudfront.net/public/125807791",
+      "link": "https://d2cmuesa4snpwn.cloudfront.net/public/125807791",
+      "file_id": 125807791,
+      "link_target": "_blank"
+    },
+    "avatar_type": "file",
+    "avatar": 125807791,
+    "id": 2468975,
+    "avatar_id": 125807791,
+    "last_seen_on": "2014-12-10 15:26:35"
+  },
+  "pinned": false,
+  "created_via": {
+    "url": null,
+    "auth_client_id": 1,
+    "display": false,
+    "name": "Podio",
+    "id": 1
+  },
+  "subscribed_count": 1,
+  "reminder": null,
+  "revisions": [
+    {
+      "item_revision_id": 435866440,
+      "created_via": {
+        "url": null,
+        "auth_client_id": 1,
+        "display": false,
+        "name": "Podio",
+        "id": 1
+      },
+      "created_by": {
+        "user_id": 2468975,
+        "name": "Brian Stengaard",
+        "url": "https://podio.com/users/2468975",
+        "type": "user",
+        "image": {
+          "hosted_by": "podio",
+          "hosted_by_humanized_name": "Podio",
+          "thumbnail_link": "https://d2cmuesa4snpwn.cloudfront.net/public/125807791",
+          "link": "https://d2cmuesa4snpwn.cloudfront.net/public/125807791",
+          "file_id": 125807791,
+          "link_target": "_blank"
+        },
+        "avatar_type": "file",
+        "avatar": 125807791,
+        "id": 2468975,
+        "avatar_id": 125807791,
+        "last_seen_on": "2014-12-10 15:26:35"
+      },
+      "created_on": "2014-12-10 15:25:32",
+      "user": {
+        "user_id": 2468975,
+        "name": "Brian Stengaard",
+        "url": "https://podio.com/users/2468975",
+        "type": "user",
+        "image": {
+          "hosted_by": "podio",
+          "hosted_by_humanized_name": "Podio",
+          "thumbnail_link": "https://d2cmuesa4snpwn.cloudfront.net/public/125807791",
+          "link": "https://d2cmuesa4snpwn.cloudfront.net/public/125807791",
+          "file_id": 125807791,
+          "link_target": "_blank"
+        },
+        "avatar_type": "file",
+        "avatar": 125807791,
+        "id": 2468975,
+        "avatar_id": 125807791,
+        "last_seen_on": "2014-12-10 15:26:35"
+      },
+      "type": "creation",
+      "revision": 0
+    }
+  ],
+  "ref": null,
+  "is_liked": false,
+  "revision": 0,
+  "files": [
+
+  ],
+  "invite": null,
+  "ratings": {
+    "like": {
+      "average": null,
+      "counts": {
+        "1": {
+          "total": 0,
+          "users": [
+
+          ]
+        }
+      }
+    }
+  },
+  "app_item_id": 1,
+  "link": "https://podio.com/podio/sandbox-4fcx2i/apps/allfields/items/1",
+  "item_id": 225607452,
+  "recurrence": null,
+  "fields": [
+    {
+      "status": "active",
+      "type": "text",
+      "field_id": 80608093,
+      "label": "Title",
+      "values": [
+        {
+          "value": "Title"
+        }
+      ],
+      "config": {
+        "default_value": null,
+        "description": null,
+        "settings": {
+          "format": "plain",
+          "size": "small"
+        },
+        "required": false,
+        "mapping": null,
+        "label": "Title",
+        "visible": true,
+        "delta": 0,
+        "hidden": false,
+        "unique": false
+      },
+      "external_id": "title"
+    },
+    {
+      "status": "active",
+      "type": "category",
+      "field_id": 80608147,
+      "label": "Category",
+      "values": [
+        {
+          "value": {
+            "status": "active",
+            "text": "B",
+            "id": 2,
+            "color": "DCEBD8"
+          }
+        }
+      ],
+      "config": {
+        "default_value": null,
+        "description": null,
+        "settings": {
+          "multiple": false,
+          "options": [
+            {
+              "status": "active",
+              "text": "A",
+              "id": 1,
+              "color": "DCEBD8"
+            },
+            {
+              "status": "active",
+              "text": "B",
+              "id": 2,
+              "color": "DCEBD8"
+            },
+            {
+              "status": "active",
+              "text": "C",
+              "id": 3,
+              "color": "DCEBD8"
+            }
+          ],
+          "display": "inline"
+        },
+        "required": false,
+        "mapping": null,
+        "label": "Category",
+        "visible": true,
+        "delta": 1,
+        "hidden": false,
+        "unique": false
+      },
+      "external_id": "category"
+    },
+    {
+      "status": "active",
+      "type": "date",
+      "field_id": 80608148,
+      "label": "Date",
+      "values": [
+        {
+          "start": "2014-12-11 23:00:00",
+          "start_date_utc": "2014-12-11",
+          "start_time_utc": "22:00:00",
+          "start_time": "23:00:00",
+          "start_utc": "2014-12-11 22:00:00",
+          "start_date": "2014-12-11"
+        }
+      ],
+      "config": {
+        "default_value": null,
+        "description": null,
+        "settings": {
+          "calendar": true,
+          "end": "enabled",
+          "time": "enabled"
+        },
+        "required": false,
+        "mapping": null,
+        "label": "Date",
+        "visible": true,
+        "delta": 2,
+        "hidden": false,
+        "unique": false
+      },
+      "external_id": "date"
+    },
+    {
+      "status": "active",
+      "type": "contact",
+      "field_id": 80608150,
+      "label": "Contact",
+      "values": [
+        {
+          "value": {
+            "user_id": 2468975,
+            "space_id": null,
+            "twitter": "@brianstengaard",
+            "rights": [
+              "view",
+              "delete",
+              "update"
+            ],
+            "url": [
+              "http://stengaard.eu/"
+            ],
+            "type": "user",
+            "image": {
+              "hosted_by": "podio",
+              "hosted_by_humanized_name": "Podio",
+              "thumbnail_link": "https://d2cmuesa4snpwn.cloudfront.net/public/125807791",
+              "link": "https://d2cmuesa4snpwn.cloudfront.net/public/125807791",
+              "file_id": 125807791,
+              "link_target": "_blank"
+            },
+            "profile_id": 140798621,
+            "org_id": null,
+            "phone": [
+              "+4529870446"
+            ],
+            "link": "https://podio.com/users/2468975",
+            "avatar": 125807791,
+            "mail": [
+              "brian@hoisthq.com",
+              "brian@stengaard.eu"
+            ],
+            "external_id": null,
+            "last_seen_on": "2014-12-10 15:26:35",
+            "name": "Brian Stengaard"
+          }
+        }
+      ],
+      "config": {
+        "default_value": null,
+        "description": null,
+        "settings": {
+          "type": "space_users",
+          "valid_types": [
+            "user"
+          ]
+        },
+        "required": false,
+        "mapping": null,
+        "label": "Contact",
+        "visible": true,
+        "delta": 4,
+        "hidden": false,
+        "unique": false
+      },
+      "external_id": "contact"
+    },
+    {
+      "status": "active",
+      "type": "number",
+      "field_id": 80608151,
+      "label": "Number",
+      "values": [
+        {
+          "value": "6513.5100"
+        }
+      ],
+      "config": {
+        "default_value": null,
+        "description": null,
+        "settings": {
+          "decimals": 0
+        },
+        "required": false,
+        "mapping": null,
+        "label": "Number",
+        "visible": true,
+        "delta": 5,
+        "hidden": false,
+        "unique": false
+      },
+      "external_id": "number"
+    },
+    {
+      "status": "active",
+      "type": "money",
+      "field_id": 80608154,
+      "label": "Money",
+      "values": [
+        {
+          "currency": "EUR",
+          "value": "541.9870"
+        }
+      ],
+      "config": {
+        "default_value": null,
+        "description": null,
+        "settings": {
+          "allowed_currencies": [
+            "USD",
+            "EUR"
+          ]
+        },
+        "required": false,
+        "mapping": null,
+        "label": "Money",
+        "visible": true,
+        "delta": 7,
+        "hidden": false,
+        "unique": false
+      },
+      "external_id": "money"
+    },
+    {
+      "status": "active",
+      "type": "embed",
+      "field_id": 80608152,
+      "label": "Link",
+      "values": [
+        {
+          "embed": {
+            "embed_id": 55017316,
+            "embed_html": null,
+            "description": "Search the world's information, including webpages, images, videos and more. Google has many special features to help you find exactly what you're looking for.",
+            "original_url": "http://google.com/",
+            "url": "http://google.com/",
+            "hostname": "google.com",
+            "embed_height": null,
+            "resolved_url": "http://google.com/",
+            "title": "Google",
+            "type": "link",
+            "embed_width": null
+          },
+          "file": null
+        }
+      ],
+      "config": {
+        "default_value": null,
+        "description": null,
+        "settings": null,
+        "required": false,
+        "mapping": null,
+        "label": "Link",
+        "visible": true,
+        "delta": 8,
+        "hidden": false,
+        "unique": false
+      },
+      "external_id": "link"
+    }
+  ],
+  "rights": [
+    "comment",
+    "subscribe",
+    "update",
+    "grant",
+    "rate",
+    "delete",
+    "add_conversation",
+    "view",
+    "add_task",
+    "add_file"
+  ],
+  "initial_revision": {
+    "item_revision_id": 435866440,
+    "created_via": {
+      "url": null,
+      "auth_client_id": 1,
+      "display": false,
+      "name": "Podio",
+      "id": 1
+    },
+    "created_by": {
+      "user_id": 2468975,
+      "name": "Brian Stengaard",
+      "url": "https://podio.com/users/2468975",
+      "type": "user",
+      "image": {
+        "hosted_by": "podio",
+        "hosted_by_humanized_name": "Podio",
+        "thumbnail_link": "https://d2cmuesa4snpwn.cloudfront.net/public/125807791",
+        "link": "https://d2cmuesa4snpwn.cloudfront.net/public/125807791",
+        "file_id": 125807791,
+        "link_target": "_blank"
+      },
+      "avatar_type": "file",
+      "avatar": 125807791,
+      "id": 2468975,
+      "avatar_id": 125807791,
+      "last_seen_on": "2014-12-10 15:26:35"
+    },
+    "created_on": "2014-12-10 15:25:32",
+    "user": {
+      "user_id": 2468975,
+      "name": "Brian Stengaard",
+      "url": "https://podio.com/users/2468975",
+      "type": "user",
+      "image": {
+        "hosted_by": "podio",
+        "hosted_by_humanized_name": "Podio",
+        "thumbnail_link": "https://d2cmuesa4snpwn.cloudfront.net/public/125807791",
+        "link": "https://d2cmuesa4snpwn.cloudfront.net/public/125807791",
+        "file_id": 125807791,
+        "link_target": "_blank"
+      },
+      "avatar_type": "file",
+      "avatar": 125807791,
+      "id": 2468975,
+      "avatar_id": 125807791,
+      "last_seen_on": "2014-12-10 15:26:35"
+    },
+    "type": "creation",
+    "revision": 0
+  },
+  "current_revision": {
+    "item_revision_id": 435866440,
+    "created_via": {
+      "url": null,
+      "auth_client_id": 1,
+      "display": false,
+      "name": "Podio",
+      "id": 1
+    },
+    "created_by": {
+      "user_id": 2468975,
+      "name": "Brian Stengaard",
+      "url": "https://podio.com/users/2468975",
+      "type": "user",
+      "image": {
+        "hosted_by": "podio",
+        "hosted_by_humanized_name": "Podio",
+        "thumbnail_link": "https://d2cmuesa4snpwn.cloudfront.net/public/125807791",
+        "link": "https://d2cmuesa4snpwn.cloudfront.net/public/125807791",
+        "file_id": 125807791,
+        "link_target": "_blank"
+      },
+      "avatar_type": "file",
+      "avatar": 125807791,
+      "id": 2468975,
+      "avatar_id": 125807791,
+      "last_seen_on": "2014-12-10 15:26:35"
+    },
+    "created_on": "2014-12-10 15:25:32",
+    "user": {
+      "user_id": 2468975,
+      "name": "Brian Stengaard",
+      "url": "https://podio.com/users/2468975",
+      "type": "user",
+      "image": {
+        "hosted_by": "podio",
+        "hosted_by_humanized_name": "Podio",
+        "thumbnail_link": "https://d2cmuesa4snpwn.cloudfront.net/public/125807791",
+        "link": "https://d2cmuesa4snpwn.cloudfront.net/public/125807791",
+        "file_id": 125807791,
+        "link_target": "_blank"
+      },
+      "avatar_type": "file",
+      "avatar": 125807791,
+      "id": 2468975,
+      "avatar_id": 125807791,
+      "last_seen_on": "2014-12-10 15:26:35"
+    },
+    "type": "creation",
+    "revision": 0
+  },
+  "linked_account_id": null,
+  "push": {
+    "timestamp": 1418225217,
+    "expires_in": 21600,
+    "channel": "/item/225607452",
+    "signature": "11a8bd86ad2c442023d5be1509c1d85e4e0404d0"
+  },
+  "external_id": null
+}

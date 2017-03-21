@@ -76,17 +76,17 @@ func (f *Field) UnmarshalJSON(data []byte) error {
 		err = f.unmarshalInto(&values, &cfg)
 		f.Values, f.Config.Settings = values, cfg
 	case "date":
-		values := []DateValue{}
-		err = f.unmarshalInto(&values, nil)
-		f.Values = values
+		values, cfg := []DateValue{}, DateFieldSettings{}
+		err = f.unmarshalInto(&values, &cfg)
+		f.Values, f.Config.Settings = values, cfg
 	case "text":
 		values, cfg := []TextValue{}, TextFieldSettings{}
 		err = f.unmarshalInto(&values, &cfg)
 		f.Values, f.Config.Settings = values, cfg
 	case "number":
-		values := []NumberValue{}
-		err = f.unmarshalInto(&values, nil)
-		f.Values = values
+		values, cfg := []NumberValue{}, NumberFieldSettings{}
+		err = f.unmarshalInto(&values, &cfg)
+		f.Values, f.Config.Settings = values, cfg
 	case "image":
 		values := []ImageValue{}
 		err = f.unmarshalInto(&values, nil)
@@ -100,9 +100,9 @@ func (f *Field) UnmarshalJSON(data []byte) error {
 		err = f.unmarshalInto(&values, nil)
 		f.Values = values
 	case "money":
-		values := []MoneyValue{}
-		err = f.unmarshalInto(&values, nil)
-		f.Values = values
+		values, cfg := []MoneyValue{}, MoneyFieldSettings{}
+		err = f.unmarshalInto(&values, &cfg)
+		f.Values, f.Config.Settings = values, cfg
 	case "progress":
 		values := []ProgressValue{}
 		err = f.unmarshalInto(&values, nil)
@@ -169,6 +169,12 @@ type NumberValue struct {
 	Value float64 `json:"value,string"`
 }
 
+// NumberFieldSettings describes the settings for a number field
+type NumberFieldSettings struct {
+	// Indicates how many decimals to show
+	Decimals int `json:"decimals"`
+}
+
 // Image is the value for fields of type `image`
 type ImageValue struct {
 	Value File `json:"value"`
@@ -180,18 +186,36 @@ type DateValue struct {
 	End   *Time `json:"end_utc"`
 }
 
+// DateFieldSettings defines the capabilities of a date field
+type DateFieldSettings struct {
+	// Is this field shown on the calendar?
+	Calendar bool `json:"calendar"`
+
+	// Indicates if the end time is valid
+	//   "enabled" means it is
+	//   "disabled" means that the time end time can be ignored
+	End string `json:"end"`
+
+	// Indicates if the field is a time field or date-only field.
+	//   "enabled" means that time is enabled on the field
+	//   "disabled" means that the field is date-only and the time fragment can be ignored
+	Time string `json:"time"`
+}
+
 // AppValue is the value for fields of type `app`
 type AppValue struct {
 	Value Item `json:"value"`
 }
 
-// AppFieldSettings configures an app field
+// AppFieldSettings defines which apps an app field can contain.
 type AppFieldSettings struct {
 	Mulitple       bool `json:"multiple"`
 	ReferencedApps []struct {
+		AppId int `json:"app_id"`
+		App   App `json:"app"`
+
+		//0 means all items in the app
 		ViewId int `json:"view_id"`
-		AppId  int `json:"app_id"`
-		App    App `json:"app"`
 	} `json:"referenced_apps"`
 }
 
@@ -209,6 +233,11 @@ type ContactValue struct {
 type MoneyValue struct {
 	Value    float64 `json:"value,string"`
 	Currency string  `json:"currency"`
+}
+
+// MoneyFieldSettings describes the allowed currencies in a money field
+type MoneyFieldSettings struct {
+	AllowedCurrencies []string `json:"allowed_currencies"`
 }
 
 // ProgressValue is the value for fields of type `progress`
