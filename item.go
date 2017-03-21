@@ -139,6 +139,14 @@ func (f *Field) UnmarshalJSON(data []byte) error {
 		values := []CalculationValue{}
 		err = f.unmarshalInto(&values, nil)
 		f.Values = values
+	case "phone":
+		values, cfg := []PhoneValue{}, PhoneFieldSettings{}
+		err = f.unmarshalInto(&values, &cfg)
+		f.Values, f.Config.Settings = values, cfg
+	case "email":
+		values, cfg := []EmailValue{}, EmailFieldSettings{}
+		err = f.unmarshalInto(&values, &cfg)
+		f.Values, f.Config.Settings = values, cfg
 	default:
 		// Unknown field type
 		values, cfg := []interface{}{}, map[string]interface{}{}
@@ -305,6 +313,31 @@ type QuestionValue struct {
 type TelValue struct {
 	Value string `json:"value"`
 	URI   string `json:"uri"`
+}
+
+// PhoneValue contains the value of a phone field - that is phone numbers.
+type PhoneValue struct {
+	Value string
+	Type  string // Home, work, fax ...
+}
+
+// PhoneFieldSettings defines the settings for the given phone field.
+type PhoneFieldSettings struct {
+	CallLinkScheme string   `json:"call_link_scheme"` // callto://
+	PossibleTypes  []string `json:"possible_types"`
+}
+
+// EmailValue holds email information of contacts fields.
+type EmailValue struct {
+	Value string // The actual email
+	Type  string // home or work email?
+}
+
+// EmailFieldSettings carries the configuration of an email field
+type EmailFieldSettings struct {
+	IncludeInBCC  bool     `json:"include_in_bcc"`
+	IncludeInCC   bool     `json:"include_in_cc"`
+	PossibleTypes []string `json:"possible_types"`
 }
 
 // CalcationValue is the value for fields of type `calculation` (currently untyped)
