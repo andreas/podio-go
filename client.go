@@ -8,6 +8,7 @@ import (
 	"io"
 	"io/ioutil"
 	"net/http"
+	"net/url"
 )
 
 type Client struct {
@@ -77,10 +78,26 @@ func (client *Client) Request(method string, path string, headers map[string]str
 }
 
 func (client *Client) RequestWithParams(method string, path string, headers map[string]string, params map[string]interface{}, out interface{}) error {
-	buf, err := json.Marshal(params)
-	if err != nil {
-		return err
-	}
+    var body io.Reader
 
-	return client.Request(method, path, headers, bytes.NewReader(buf), out)
+    if method == "GET" {
+        pathURL, err := url.Parse(path)
+        if err != nil {
+            return err
+        }
+        query := pathURL.Query()
+        for key, value := range params {
+            query.Add(key, fmt.Sprint(value))
+        }
+        pathURL.RawQuery = query.Encode()
+        path = pathURL.String()
+    } else {
+        buf, err := json.Marshal(params)
+        if err != nil {
+            return err
+        }
+        body = bytes.NewReader(buf)
+    }
+
+    return client.Request(method, path, headers, body, out)
 }
