@@ -16,7 +16,7 @@ type Item struct {
 	Space              Space    `json:"space"`
 	App                App      `json:"app"`
 	CreatedVia         Via      `json:"created_via"`
-	CreatedBy          ByLine   `json:"by_line"`
+	CreatedBy          ByLine   `json:"created_by"`
 	CreatedOn          Time     `json:"created_on"`
 	Link               string   `json:"link"`
 	Revision           int      `json:"revision"`

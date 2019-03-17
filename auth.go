@@ -42,6 +42,18 @@ func AuthWithAppCredentials(clientId, clientSecret string, appId int64, appToken
 	return authRequest(data)
 }
 
+func RefreshTokenWithAppCredentials(clientId, clientSecret string, appId int64, refreshToken string) (*AuthToken, error) {
+	data := url.Values{
+		"grant_type":    {"refresh_token"},
+		"app_id":        {fmt.Sprintf("%d", appId)},
+		"refresh_token": {refreshToken},
+		"client_id":     {clientId},
+		"client_secret": {clientSecret},
+	}
+
+	return authRequest(data)
+}
+
 func AuthWithAuthCode(clientId, clientSecret, authCode, redirectUri string) (*AuthToken, error) {
 	data := url.Values{
 		"grant_type":    {"authorization_code"},
